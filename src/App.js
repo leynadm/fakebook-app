@@ -6,7 +6,7 @@ import Login from "./components/Login";
 import { AuthProvider } from "./components/Auth";
 import SignUp from "./components/SignUp";
 import Feed from "./components/Feed";
-import PrivateRoute from "./components/PrivateRoute";
+import HomeRoute from "./components/HomeRoute";
 import LoginRoute from "./components/LoginRoute";
 function App() {
   return (
@@ -14,20 +14,13 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            
-            <Route path="/" element={<Home />} />
+            <Route element={<HomeRoute />}>
+              <Route element={<Home />} path="/home" />
+            </Route>
 
-            <Route element={<PrivateRoute />}>
-              <Route element={<Feed />} path="/feed" />
-            </Route>
-            
             <Route element={<LoginRoute />}>
-              <Route element={<Login />} path="/login" />
+              <Route element={<Login />} path="/" />
             </Route>
-            
-            {/* 
-            <Route path="/login" element={<Login />} />
-            */}      
           </Routes>
         </Router>
       </AuthProvider>
