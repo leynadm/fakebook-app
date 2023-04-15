@@ -14,11 +14,20 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
+            
             <Route path="/" element={<Home />} />
+
             <Route element={<PrivateRoute />}>
               <Route element={<Feed />} path="/feed" />
             </Route>
+            
+            <Route element={<LoginRoute />}>
+              <Route element={<Login />} path="/login" />
+            </Route>
+            
+            {/* 
             <Route path="/login" element={<Login />} />
+            */}      
           </Routes>
         </Router>
       </AuthProvider>
