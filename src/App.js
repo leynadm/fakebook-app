@@ -5,22 +5,39 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import { AuthProvider } from "./components/Auth";
 import SignUp from "./components/SignUp";
-import Feed from "./components/Feed";
-import HomeRoute from "./components/HomeRoute";
-import LoginRoute from "./components/LoginRoute";
+import AuthRoute from "./components/AuthRoute";
+
 function App() {
   return (
     <div className="App">
       <AuthProvider>
         <Router>
           <Routes>
-            <Route element={<HomeRoute />}>
+            
+            {/* If the user is signed in, reroute him to home */}
+            <Route element={<AuthRoute type="home" />}>
               <Route element={<Home />} path="/home" />
             </Route>
 
-            <Route element={<LoginRoute />}>
+            {/* If the user is signed in, reroute him to home */}
+            <Route element={<AuthRoute type="signup" />}>
+              <Route element={<SignUp />} path="/signup" />
+            </Route>
+
+   
+   
+            {/* If the user is signed in, reroute him to home 
+            <Route element={<AuthRoute type="home" />}>
+            </Route>
+*/}
+
+   
+
+            {/* If the user isn't signed him, reroute him to login */}
+            <Route element={<AuthRoute type="login" />}>
               <Route element={<Login />} path="/" />
             </Route>
+
           </Routes>
         </Router>
       </AuthProvider>

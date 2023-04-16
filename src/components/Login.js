@@ -1,25 +1,31 @@
-import React,{useState,useEffect,useContext} from "react";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { app, auth } from "../config/firebase";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../config/firebase";
 import { AuthContext } from "./Auth";
-import "../styles/Login.css"
-function Login() {
+import "../styles/Login.css";
+import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router";
+//import { useHistory } from "react-router-dom";
 
+function Login() {
   const userAuth = getAuth();
   const provider = new GoogleAuthProvider();
-
   const { currentUser } = useContext(AuthContext);
+  //const history = useHistory()
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [navigateToSignUp, setNavigateToSignUp] = useState(false);
 
-  const [userName, setUserName] = useState("");
+  const handleSignUpClick = () =>{
+    <Navigate to="/signup"/> // New line
+  }
 
-  useEffect(() => {
-    if (currentUser) {
-      setUserName(currentUser.displayName);
-    }
-    console.log(userName);
-  }, [currentUser]);
-
-  
   function SignInWithGoogle() {
     signInWithPopup(userAuth, provider)
       .then((result) => {
@@ -28,8 +34,8 @@ function Login() {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        console.log(user)
-        
+        console.log(user);
+
         // IdP data available using getAdditionalUserInfo(result)
         // ...
       })
@@ -45,28 +51,61 @@ function Login() {
       });
   }
 
+  /* Sign in with email and password */
+
+  function handleLogIn(e) {
+    e.preventDefault();
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  }
+
   return (
     <div className="login-wrapper">
+      
       <div>Stalkbook</div>
       <div>Find out who's stalking you and stalk them back!</div>
       <div></div>
       <div></div>
-      <form>
-        <input type="email" placeholder="Add your email address here" />
-        <input type="password" placeholder="Add your password here" />
+      <form onSubmit={handleLogIn}>
+        <input
+          type="email"
+          name="email"
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Add your email address here"
+        />
+        <input
+          type="password"
+          name="password"
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Add your password here"
+        />
+        <button type="submit">Login</button>
       </form>
-      <button type="button">
-        Login
-      </button>
       <div>You can also...</div>
       <button type="button" onClick={SignInWithGoogle}>
         LOG IN WITH GOOGLE
       </button>
       <div>
-      {userName}
+        Don't have an account?{" "}
+        <span>
+          <button type="button" onClick={()=>navigate('/signup')}>
+            Sign Up Here!
+          </button>
+        </span>
       </div>
+
+
     </div>
   );
 }
 
-export default Login
+export default Login;

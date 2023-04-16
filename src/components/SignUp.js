@@ -1,24 +1,16 @@
-import React,{useState,useEffect,useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./Auth";
-function SignUp(){
+import { auth } from "../config/firebase";
 
-    const { currentUser } = useContext(AuthContext);
+function SignUp() {
+  const { currentUser } = useContext(AuthContext);
 
-    const [userName, setUserName] = useState("");
-  
-    useEffect(() => {
-      if (currentUser) {
-        setUserName(currentUser.displayName);
-      }
-      console.log(userName)
-  }, [currentUser,userName]);
-  
-    return(
-        <div>
-            <div>Sign Up</div>
-            <div>{userName}</div>
-        </div>
-    )
+  return (
+    <div>
+      <div>Sign Up</div>
+      <div>Can have user name</div>
+    </div>
+  );
 }
 
-export default SignUp
+export default SignUp;
