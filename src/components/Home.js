@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { auth } from "../config/firebase";
 import { AuthContext } from "./Auth";
-
+import Navbar from "./Navbar";
 const Home = () => {
   const { currentUser } = useContext(AuthContext);
 

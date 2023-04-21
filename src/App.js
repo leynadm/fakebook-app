@@ -13,31 +13,20 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            
-            {/* If the user is signed in, reroute him to home */}
+            {/* If the user is signed in and tries to access login, reroute him to home */}
             <Route element={<AuthRoute type="home" />}>
               <Route element={<Home />} path="/home" />
             </Route>
 
-            {/* If the user is signed in, reroute him to home */}
+            {/* If the user is signed in and tries to access signup, reroute him to home */}
             <Route element={<AuthRoute type="signup" />}>
               <Route element={<SignUp />} path="/signup" />
             </Route>
-
-   
-   
-            {/* If the user is signed in, reroute him to home 
-            <Route element={<AuthRoute type="home" />}>
-            </Route>
-*/}
-
-   
 
             {/* If the user isn't signed him, reroute him to login */}
             <Route element={<AuthRoute type="login" />}>
               <Route element={<Login />} path="/" />
             </Route>
-
           </Routes>
         </Router>
       </AuthProvider>
@@ -45,4 +34,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
