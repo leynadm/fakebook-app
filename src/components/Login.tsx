@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext,ChangeEvent } from "react";
 import {
   getAuth,
   signInWithPopup,
@@ -17,27 +17,30 @@ function Login() {
   const provider = new GoogleAuthProvider();
   const { currentUser } = useContext(AuthContext);
   //const history = useHistory()
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [navigateToSignUp, setNavigateToSignUp] = useState(false);
 
-  const handleSignUpClick = () =>{
-    <Navigate to="/signup"/> // New line
-  }
+  function handleSignUpClick() {
+    navigate("/signup");
+  };
 
   function SignInWithGoogle() {
     signInWithPopup(userAuth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
+        
+        if(credential){
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          console.log(user);
+  
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+        }
 
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
       })
       .catch((error) => {
         // Handle Errors here.
@@ -53,7 +56,7 @@ function Login() {
 
   /* Sign in with email and password */
 
-  function handleLogIn(e) {
+  function handleLogIn(e:ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
 
     signInWithEmailAndPassword(auth, email, password)
@@ -70,7 +73,6 @@ function Login() {
 
   return (
     <div className="login-wrapper">
-      
       <div>Stalkbook</div>
       <div>Find out who's stalking you and stalk them back!</div>
       <div></div>
@@ -97,13 +99,11 @@ function Login() {
       <div>
         Don't have an account?{" "}
         <span>
-          <button type="button" onClick={()=>navigate('/signup')}>
+          <button type="button" onClick={handleSignUpClick}>
             Sign Up Here!
           </button>
         </span>
       </div>
-
-
     </div>
   );
 }

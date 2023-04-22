@@ -1,25 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import { auth } from "../config/firebase";
-import { AuthContext } from "./Auth";
 import Navbar from "./Navbar";
+import Feed from "./Feed";
 const Home = () => {
+
+/* 
   const { currentUser } = useContext(AuthContext);
 
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
     if (currentUser) {
-      setUserName(currentUser.displayName);
+      setUserName(currentUser.email);
     }
-    console.log(userName)
-}, [currentUser]);
- 
+
+}, [currentUser, userName]);
+  */
 
   return (
     <div>
-      <div>Home</div>
-      <div>{userName}</div>
-      <button onClick={() => auth.signOut()}>Sign Out</button>
+      <Navbar/>
+      <Feed/>
     </div>
   );
 };

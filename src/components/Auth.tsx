@@ -1,9 +1,17 @@
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState, createContext, ReactNode } from "react";
 import { auth } from "../config/firebase";
 // Create the context to hold the data and share it among all components
-export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+
+export const AuthContext = createContext<any>({
+  currentUser:null,
+});
+
+export const AuthProvider = ({ children}:AuthProviderProps ) => {
   // Set the current user in case the user is already logged in
   const [currentUser, setCurrentUser] = useState(() => auth.currentUser);
 

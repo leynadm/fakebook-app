@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext,ChangeEvent } from "react";
 import { AuthContext } from "./Auth";
 import "../styles/SignUp.css";
 import { auth, db } from "../config/firebase";
@@ -14,7 +14,7 @@ function SignUp() {
   const [birthdate, setBirthdate] = useState("");
   const [sex, setSex] = useState("");
 
-  const handleSexChange = (e) => {
+  const handleSexChange = (e:ChangeEvent<HTMLInputElement>) => {
     setSex(e.target.value);
   };
 
@@ -24,7 +24,19 @@ function SignUp() {
     });
   }
 
-  const handleSignUp = async (e) => {
+  function isFirebaseError(error: unknown): error is { code: string; message: string } {
+    return (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      "message" in error &&
+      typeof (error as any).code === "string" &&
+      typeof (error as any).message === "string"
+    );
+  }
+  
+
+  const handleSignUp = async (e:ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -42,12 +54,15 @@ function SignUp() {
         surname: surname,
       });
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(email, password);
-    }
+      if (isFirebaseError(error)) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(email, password);
+      } else {
+        console.log("An unknown error occurred:", error);
+      }
   };
-
+  }
   /* TODO: Set up verification email process
   function VerificationEmail() {
     auth.currentUser.sendEmailVerification().then(() => {

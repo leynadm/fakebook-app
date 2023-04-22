@@ -1,0 +1,9 @@
+.feed-wrapper {
+    text-align: center;
+    height: calc(100vh - 10vh);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+}

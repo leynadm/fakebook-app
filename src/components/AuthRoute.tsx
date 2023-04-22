@@ -2,7 +2,12 @@ import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router";
 import { AuthContext } from "./Auth";
 
-const AuthRoute = ({ type }) => {
+interface AuthRouteProps {
+  type: "home" | "login" | "signup";
+}
+
+
+const AuthRoute = ({ type}:AuthRouteProps) => {
   const { currentUser } = useContext(AuthContext);
 
   if (type === "home") {
