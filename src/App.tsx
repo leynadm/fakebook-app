@@ -15,7 +15,7 @@ function App() {
           <Routes>
             {/* If the user is signed in and tries to access login, reroute him to home */}
             <Route element={<AuthRoute type="home" />}>
-              <Route element={<Home />} path="/home" />
+              <Route element={<Home />} path="/home/*" />
             </Route>
 
             {/* If the user is signed in and tries to access signup, reroute him to home */}

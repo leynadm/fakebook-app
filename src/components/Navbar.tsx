@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { auth } from "../config/firebase";
 import "../styles/Navbar.css";
-import { AuthContext } from "./Auth";
-
+import SearchBar from "./SearchBar";
 function Navbar() {
   const navRef: RefObject<HTMLHeadElement> = useRef<HTMLHeadElement>(null);
 
@@ -18,10 +17,7 @@ function Navbar() {
     <div>
       <header>
         <div>Logo</div>
-        <div className="search-bar">
-          <input type="text" placeholder="Search for a person..." />
-          <button type="button">Submit</button>
-        </div>
+        <SearchBar/>
         <nav ref={navRef}>
           <Link to="/home">Home</Link>
 

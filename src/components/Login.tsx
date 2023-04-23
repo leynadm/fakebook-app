@@ -9,7 +9,6 @@ import { auth } from "../config/firebase";
 import { AuthContext } from "./Auth";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
-import { Navigate } from "react-router";
 //import { useHistory } from "react-router-dom";
 
 function Login() {

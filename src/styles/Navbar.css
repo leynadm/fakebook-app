@@ -19,6 +19,22 @@ header .nav-btn {
     outline: none;
     visibility: hidden;
     opacity: 0;
+    font-size: 1rem;    
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 5vh;
+    padding: 0 1rem;
+
 }
 
 /* Small screens (up to 599px) */
@@ -27,23 +43,10 @@ header .nav-btn {
     header .nav-btn {
         visibility: visible;
         opacity: 1;
-        font-size: 2rem;
+        font-size: 1.25rem;
     }
 
-    header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 999;
-        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 10vh;
-        padding: 0 1rem;
 
-    }
 
     header nav {
         position: fixed;
@@ -61,6 +64,7 @@ header .nav-btn {
 
     header .responsive_nav {
         transform: translateY(100vh);
+        background-color: white;
     }
 
     nav .nav-close-btn {
@@ -91,24 +95,9 @@ header .nav-btn {
     header .nav-btn {
         visibility: visible;
         opacity: 1;
-        font-size: 2.25rem;
-
+        font-size: 1.25rem;
     }
 
-    header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 999;
-        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 10vh;
-        padding: 0 2rem;
-
-    }
 
     header nav {
         position: fixed;
@@ -160,19 +149,6 @@ header .nav-btn {
         width: 16rem;
     }
 
-    header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 999;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 10vh;
-        padding: 0 2rem;
-        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    }
 
     nav a {
         margin: 0 1rem;
@@ -181,9 +157,7 @@ header .nav-btn {
         font-size: 1.5rem;
     }
 
-    nav a:hover {
-
-    }
+    nav a:hover {}
 
     header div,
     nav {

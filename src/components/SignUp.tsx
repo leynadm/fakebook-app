@@ -52,6 +52,7 @@ function SignUp() {
         birthdate: birthdate,
         name: name,
         surname: surname,
+        fullname: name + " " + surname
       });
     } catch (error) {
       if (isFirebaseError(error)) {

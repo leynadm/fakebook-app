@@ -1,14 +1,13 @@
 import React from "react";
 import "../styles/Feed.css"
+import PostList from "./PostList";
 function Feed(){
 
     return(
         <div className="feed-wrapper">
-            <div>My Feed</div>
-            <div>Today</div>
+            <PostList/>            
         </div>
     )
-
 }
 
 export default Feed

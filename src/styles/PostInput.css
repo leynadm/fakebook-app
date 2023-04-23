@@ -1,0 +1,11 @@
+.post-input-wrappper{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-input-lower-row{
+    display: flex;
+    justify-content:space-evenly;
+}
