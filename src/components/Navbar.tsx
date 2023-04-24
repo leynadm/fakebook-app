@@ -21,7 +21,7 @@ function Navbar() {
         <nav ref={navRef}>
           <Link to="/home">Home</Link>
 
-          <Link to="/profile">Profile</Link>
+          <Link to="/home/profile">Profile</Link>
 
           <div>
             <button onClick={() => auth.signOut()}>Sign Out</button>

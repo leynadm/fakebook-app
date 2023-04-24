@@ -3,15 +3,7 @@ import { db } from "../config/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
-interface User {
-  birthdate: string;
-  fullname: string;
-  name: string;
-  sex: string;
-  surname: string;
-}
-
-
+import {User} from "../types/user"
 
 function SearchBar() {
   const navigate = useNavigate();
@@ -20,10 +12,10 @@ function SearchBar() {
   useEffect(() => {}, []);
 
   async function getUsers() {
-    console.log("User to search is: " + userToSearch)
+    console.log("User to search is: " + userToSearch);
     const q = query(
       collection(db, "users"),
-      where("fullname", "array-contains", userToSearch),
+      where("fullname", "array-contains", userToSearch)
     );
     const querySnapshot = await getDocs(q);
 
@@ -37,15 +29,11 @@ function SearchBar() {
     });
 
     setUsersFound(userResults);
-    navigate("/results");
+    navigate("/home/results", { state: { userToSearch } });
   }
 
-
-  function handleSearchClick() {
-    
-  };
-
   return (
+    
     <div className="search-bar">
       <input
         type="text"

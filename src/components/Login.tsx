@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext,ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import {
   getAuth,
   signInWithPopup,
@@ -9,12 +9,10 @@ import { auth } from "../config/firebase";
 import { AuthContext } from "./Auth";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
-//import { useHistory } from "react-router-dom";
 
 function Login() {
   const userAuth = getAuth();
   const provider = new GoogleAuthProvider();
-  const { currentUser } = useContext(AuthContext);
   //const history = useHistory()
   const navigate = useNavigate();
   const [email, setEmail] = useState("");

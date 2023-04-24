@@ -20,9 +20,6 @@ function PostModal() {
       setPostText("")
     }
   }
-  /*  
-  const handlePostText = 
- */
   return (
     <div className="post-modal-wrapper">
       <div className="post-modal-upper-row">

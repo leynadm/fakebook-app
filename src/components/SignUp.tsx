@@ -3,7 +3,7 @@ import { AuthContext } from "./Auth";
 import "../styles/SignUp.css";
 import { auth, db } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, arrayUnion } from "firebase/firestore";
 
 function SignUp() {
   const { currentUser } = useContext(AuthContext);
@@ -52,7 +52,7 @@ function SignUp() {
         birthdate: birthdate,
         name: name,
         surname: surname,
-        fullname: name + " " + surname
+        fullname: arrayUnion(name,surname,name+" " +surname)
       });
     } catch (error) {
       if (isFirebaseError(error)) {
