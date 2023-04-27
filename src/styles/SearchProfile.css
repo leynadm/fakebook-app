@@ -1,0 +1,52 @@
+.search-profile-wrapper{
+    text-align: center;
+    height: 94vh;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+
+.search-profile-cover-picture {
+    height: 40vh;
+    background-color: orange;
+    position: relative;
+    z-index: 1;
+
+}
+
+.search-profile-picture-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 20vh;
+    width: 20vh;
+    background-color: blue;
+    position: absolute;
+    top: 80%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    border-radius: 50%;
+}
+
+
+.search-profile-wrapper-content {
+    grid-column: 2/3;
+}
+
+.search-profile-cover-image {
+    width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.search-profile-photo-image {
+    width: 100%;
+    max-height: 100%;
+    object-fit:cover;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+

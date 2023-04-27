@@ -22,6 +22,19 @@ header .nav-btn {
     font-size: 1rem;    
 }
 
+.nav-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    padding: 0.50rem;
+    border-radius: 15%;
+}
+
+.nav-button:hover{
+    background-color: lightblue;
+}
+
 header {
     position: fixed;
     top: 0;
@@ -31,10 +44,15 @@ header {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 5vh;
+    justify-content:space-between;
+    height: 6vh;
     padding: 0 1rem;
 
+}
+
+.top-left-logo{
+    width: 35%;
+    height: 35%;
 }
 
 /* Small screens (up to 599px) */
@@ -45,8 +63,6 @@ header {
         opacity: 1;
         font-size: 1.25rem;
     }
-
-
 
     header nav {
         position: fixed;
@@ -115,6 +131,8 @@ header {
 
     header .responsive_nav {
         transform: translateY(100vh);
+        background-color: white;
+    
     }
 
     nav .nav-close-btn {

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { db } from "../config/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
-import {User} from "../types/user"
+import "../styles/SearchBar.css";
+import { User } from "../types/user";
 
 function SearchBar() {
   const navigate = useNavigate();
@@ -33,16 +33,17 @@ function SearchBar() {
   }
 
   return (
-    
     <div className="search-bar">
       <input
+        className="search-bar-input"
         type="text"
         onChange={(e) => setUserToSearch(e.target.value)}
         placeholder="Search for a person..."
       />
-      <button type="button" onClick={getUsers}>
-        Submit
+      <button className="bar-button" type="button" onClick={getUsers}>
+        <span className="material-symbols-outlined">search</span>
       </button>
+
     </div>
   );
 }

@@ -70,7 +70,7 @@ function Login() {
 
   return (
     <div className="login-wrapper">
-      <div>Stalkbook</div>
+      <div>Fakebook</div>
       <div>Find out who's stalking you and stalk them back!</div>
       <div></div>
       <div></div>

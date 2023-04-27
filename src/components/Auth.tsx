@@ -6,7 +6,6 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-
 export const AuthContext = createContext<any>({
   currentUser:null,
 });

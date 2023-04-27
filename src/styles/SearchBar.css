@@ -1,0 +1,30 @@
+.search-bar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bar-button{
+    margin-left: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    border: none;
+    padding: 0.50rem;
+    border-radius: 15%;
+}
+
+.bar-button:hover{
+    background-color: lightblue;
+}
+
+.search-bar-input{
+    border: none;
+    background-color: lightgray;
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    padding: 0.5rem;
+}

@@ -1,9 +1,10 @@
-import React, { useRef,RefObject } from "react";
+import React, { useRef, RefObject } from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { auth } from "../config/firebase";
 import "../styles/Navbar.css";
 import SearchBar from "./SearchBar";
+import FakeBookLogo from "../assets/fakebook-website-favicon-color.png"
 function Navbar() {
   const navRef: RefObject<HTMLHeadElement> = useRef<HTMLHeadElement>(null);
 
@@ -16,16 +17,27 @@ function Navbar() {
   return (
     <div>
       <header>
-        <div>Logo</div>
-        <SearchBar/>
+        <div><img className="top-left-logo" src={FakeBookLogo} alt="logo"/></div>
+        <SearchBar />
         <nav ref={navRef}>
-          <Link to="/home">Home</Link>
+          <Link to="/home">
+            <button type="button" className="nav-button">
+              <span className="material-symbols-outlined">home</span>
+            </button>
+          </Link>
 
-          <Link to="/home/profile">Profile</Link>
+          <Link to="/home/profile">
+            <button type="button" className="nav-button">
+              <span className="material-symbols-outlined">account_circle</span>
+            </button>
+          </Link>
 
-          <div>
-            <button onClick={() => auth.signOut()}>Sign Out</button>
-          </div>
+          <Link to="/">
+            <button className="nav-button" onClick={() => auth.signOut()}>
+              {" "}
+              <span className="material-symbols-outlined">logout</span>
+            </button>
+          </Link>
           <button className="nav-btn nav-close-btn" onClick={showNavbar}>
             <FaTimes />
           </button>

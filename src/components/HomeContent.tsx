@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import CreatePost from "./CreatePost";
 import Feed from "./Feed";
-function HomeContent(){
 
-    return(
-        <div>
-            <CreatePost/>
-            <Feed/>
-        </div>
-    )
+function HomeContent() {
+  return (
+    <div>
+      <CreatePost />
+      <Feed />
+    </div>
+  );
 }
 
-export default HomeContent
+export default HomeContent;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { PostContext } from "./PostContext";
 import {
   collection,
   query,
@@ -17,12 +18,12 @@ interface Post {
 
 function PostList() {
   const { currentUser } = useContext(AuthContext);
-
+  const { updateKey} = useContext(PostContext);
   const [userFeed, setUserFeed] = useState<Post[]>([]);
 
   useEffect(() => {
     getUserPosts();
-  }, []);
+  }, [updateKey]);
 
   async function getUserPosts() {
     const q = query(
@@ -37,7 +38,7 @@ function PostList() {
       // doc.data() is never undefined for query doc snapshots
       const post = doc.data() as Post;
       tempUserFeed.push(post);
-      console.log(doc.id, " => ", doc.data());
+      //console.log(doc.id, " => ", doc.data());
     });
 
     setUserFeed(tempUserFeed);
@@ -45,6 +46,7 @@ function PostList() {
 
   return (
     <div>
+
       {userFeed.map((post, index) => (
         <div key={index}>
           <div>{currentUser.displayName}</div>

@@ -3,11 +3,14 @@ import "../styles/PostModal.css";
 import { db } from "../config/firebase";
 import { AuthContext } from "./Auth";
 import { collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { PostContext } from "./PostContext";
 
-function PostModal() {
+function PostModal(){
+
+  const { increaseUpdateSequence } = useContext(PostContext);
   const { currentUser } = useContext(AuthContext);
   const [postText, setPostText] = useState("");
-
+  
   async function addPost() {
     if (postText !== "") {
       const newPostRef = doc(collection(db, "posts"));
@@ -16,7 +19,7 @@ function PostModal() {
         text: postText,
         userID: currentUser.uid,
       });
-
+      increaseUpdateSequence()
       setPostText("")
     }
   }

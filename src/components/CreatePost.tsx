@@ -1,16 +1,16 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import PostInput from "./PostInput";
 import PostModal from "./PostModal";
-import "../styles/CreatePost.css"
+import "../styles/CreatePost.css";
+import { PostContext } from "./PostContext";
 
-function CreatePost(){
-
-    return(
-        <div className="create-post-wrapper">
-            {/* <PostInput/> */}
-            <PostModal/>
-        </div>
-    )
+function CreatePost() {
+  return (
+    <div className="create-post-wrapper">
+      {/* <PostInput/> */}
+      <PostModal />
+    </div>
+  );
 }
 
-export default CreatePost
+export default CreatePost;

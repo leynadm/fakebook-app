@@ -7,14 +7,15 @@
     width: 100%;
 }
 
-.profile-cover-picture{
+.profile-cover-picture {
     height: 40vh;
     background-color: orange;
     position: relative;
     z-index: 1;
+
 }
 
-.profile-picture-wrapper{
+.profile-picture-wrapper {
     display: flex;
     flex-direction: column;
     height: 20vh;
@@ -28,29 +29,85 @@
     border-radius: 50%;
 }
 
-.profile-picture-wrapper > div {
-    margin-top: auto; /* push button to bottom */
-  }
+.profile-picture-wrapper>div {
+    margin-top: auto;
+    /* push button to bottom */
+}
 
-.profile-wrapper-content{
+.profile-wrapper-content {
     grid-column: 2/3;
 }
 
-.profile-cover-image{
+.profile-cover-image {
+    width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.profile-button {
+
+    border: none;
+    padding: 0.50rem;
+    border-radius: 15%;
+}
+
+
+.profile-cover-choose-btn {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.profile-cover-choose-btn+label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: black;
+    display: inline-block;
+}
+
+.profile-cover-choose-btn:focus+label,
+.profile-cover-choose-btn+label:hover {
+    background-color: red;
+}
+
+.profile-cover-choose-group{
+    position: absolute;
+    top: 90%;
+    right: 1%;
+}
+
+.profile-photo-choose-btn {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.profile-photo-choose-btn+label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: black;
+    display: inline-block;
+}
+
+.profile-photo-choose-btn:focus+label,
+.profile-photo-choose-btn+label:hover {
+    background-color: red;
+}
+
+.profile-photo-image {
     width: 100%;
     max-height: 100%;
     object-fit:cover;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
-.profile-cover-choose{
-    position: absolute;
-    right: 0;
-}
 
-.profile-cover-upload{
-
-}
-
-.profile-cover-buttons-group{
-
-}
