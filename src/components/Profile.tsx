@@ -3,12 +3,7 @@ import "../styles/Profile.css";
 import { AuthContext } from "./Auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db, storage } from "../config/firebase";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  list,
-} from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, list } from "firebase/storage";
 import { User } from "../types/user";
 
 import defaultProfileImage from "../assets/default-profile.jpeg";
@@ -113,64 +108,61 @@ function Profile() {
 
   return (
     <div className="profile-wrapper">
+      <div className="profile-wrapper-content">
+        <div className="profile-cover-picture">
+          <img
+            className="profile-cover-image"
+            src={coverImageURL}
+            alt="cover"
+          />
 
-        <div className="profile-wrapper-content">
-          <div className="profile-cover-picture">
-            <img
-              className="profile-cover-image"
-              src={coverImageURL}
-              alt="cover"
+          <div className="profile-cover-choose-group">
+            <label htmlFor="profile-cover-choose-btn">
+              <span className="material-symbols-outlined">photo_camera</span>
+            </label>
+            <input
+              className="profile-cover-choose-btn"
+              id="profile-cover-choose-btn"
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={handleCoverImageUpload("cover")}
             />
+          </div>
 
-            <div className="profile-cover-choose-group">
-              <label htmlFor="profile-cover-choose-btn">
-                <span className="material-symbols-outlined">photo_camera</span>
-              </label>
-              <input
-                className="profile-cover-choose-btn"
-                id="profile-cover-choose-btn"
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleCoverImageUpload("cover")}
+          <div className="profile-picture-wrapper">
+            <div className="profile-picture">
+              <img
+                className="profile-photo-image"
+                src={profileImageURL}
+                alt="cover"
               />
             </div>
 
-            <div className="profile-picture-wrapper">
-              <div className="profile-picture">
-                <img
-                  className="profile-photo-image"
-                  src={profileImageURL}
-                  alt="cover"
-                />
-              </div>
-
-              <div className="profile-button">
-                <label htmlFor="profile-photo-choose-btn">
-                  <span className="material-symbols-outlined">
-                    photo_camera
-                  </span>
-                </label>
-                <input
-                  className="profile-photo-choose-btn"
-                  id="profile-photo-choose-btn"
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  onChange={handleCoverImageUpload("profile")}
-                />
-              </div>
+            <div className="profile-button">
+              <label htmlFor="profile-photo-choose-btn">
+                <span className="material-symbols-outlined">photo_camera</span>
+              </label>
+              <input
+                className="profile-photo-choose-btn"
+                id="profile-photo-choose-btn"
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleCoverImageUpload("profile")}
+              />
             </div>
           </div>
-
-          <div className="profile-info-bar">
-            {currentUser.displayName ? (
-              <div>{currentUser.displayName}</div>
-            ) : (
-              <div>{queriedUser?.name + " " + queriedUser?.surname}</div>
-            )}
-          </div>
-
-          <div className="profile-content"></div>
         </div>
+
+        <div className="profile-info-bar">
+          {currentUser.displayName ? (
+            <div>{currentUser.displayName}</div>
+          ) : (
+            <div>{queriedUser?.name + " " + queriedUser?.surname}</div>
+          )}
+        </div>
+
+        <div className="profile-content"></div>
+      </div>
     </div>
   );
 }

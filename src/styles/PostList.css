@@ -1,0 +1,41 @@
+.post-upper-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #f0f2f5;
+    margin: 1rem;
+}
+
+.posts-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    /*
+    for desktop 
+    width: 50%;
+    margin: 0 auto;
+ */
+}
+
+.post-middle-image{
+    max-width: 50%;
+    max-height: 50%;
+}
+
+.post-middle-row{
+
+}
+
+.post-middle-text{
+    padding: 0.5rem;
+}
