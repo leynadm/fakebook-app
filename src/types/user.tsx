@@ -5,4 +5,5 @@ export interface User {
     sex: string;
     surname: string;
     bio?:string
+    verified:boolean
   }

@@ -52,6 +52,8 @@ function SignUp() {
         birthdate: birthdate,
         name: name,
         surname: surname,
+        bio: "",
+        verified:false,
         fullname: arrayUnion(name,surname,name+" " +surname)
       });
     } catch (error) {

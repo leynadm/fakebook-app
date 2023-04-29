@@ -34,11 +34,59 @@
     height: 50%;
 }
 
-.post-modal-wrapper{
-
-}
 
 .post-photo-image-group{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
+
+
+.post-modal-btn {
+    background-color: #FFFFFF;
+    border: 0;
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: #111827;
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    padding: .75rem 1rem;
+    text-align: center;
+    text-decoration: none #D1D5DB solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 1px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+  
+  .post-modal-btn:hover {
+    background-color: rgb(249,250,251);
+  }
+  
+  .post-modal-btn:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  
+  .post-modal-btn:focus-visible {
+    box-shadow: none;
+  }
+  
+  .search-profile-follow-group{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .search-profile-follow-icon{
+      margin-left: 0.5rem;
+  }
+  
+  .search-profile-follow-btn{
+      display: flex;
+  }

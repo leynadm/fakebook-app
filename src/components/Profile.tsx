@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/Profile.css";
 import { AuthContext } from "./Auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc,query,collection,where,getDocs } from "firebase/firestore";
 import { db, storage } from "../config/firebase";
 import { ref, uploadBytes, getDownloadURL, list } from "firebase/storage";
 import { User } from "../types/user";
@@ -72,6 +72,24 @@ function Profile() {
     } else {
       // docSnap.data() will be undefined in this case
       console.log("No such document!");
+    }
+  }
+
+  async function getUserPosts() {
+    const q = query(
+      collection(db, "posts"),
+      where("userID", "==", currentUser.uid)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    const docRef = doc(db, "users", currentUser.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      //console.log("Document data:", docSnap.data());
+      const userData = docSnap.data() as User;
+      setQueriedUser(userData);
     }
   }
 

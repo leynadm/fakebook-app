@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/PostModal.css";
-import { db,storage } from "../config/firebase";
+import { db, storage } from "../config/firebase";
 import { AuthContext } from "./Auth";
-import { collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { collection, setDoc, doc, Timestamp,FieldValue, serverTimestamp, arrayUnion, updateDoc } from "firebase/firestore";
 import { PostContext } from "./PostContext";
 import uuid from "react-uuid";
-import { ref,uploadBytes, getDownloadURL} from "firebase/storage";
-function PostModal(){
-
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+function PostModal() {
   const { increaseUpdateSequence } = useContext(PostContext);
   const { currentUser } = useContext(AuthContext);
   const [postText, setPostText] = useState("");
@@ -15,13 +14,7 @@ function PostModal(){
   const [fileSource, setFileSource] = useState<string | null>(null);
 
   async function addPost() {
-
-
-
     if (postText !== "") {
-    
-      const newPostRef = doc(collection(db, "posts"));
-
       let imageUrl: string | null = null;
       let imageRef = null;
       if (selectedFile) {
@@ -30,25 +23,47 @@ function PostModal(){
           `images/${currentUser.uid}/${currentUser.uid}_${uuid()}`
         );
         await uploadBytes(imageRef, selectedFile);
-      imageUrl = await getDownloadURL(imageRef);
-      
-    }
-
+        imageUrl = await getDownloadURL(imageRef);
+      }
+  
+      const newPostRef = doc(collection(db, "posts"));
+  
+      const serverTimestampObj = serverTimestamp()
+      const timestamp = Timestamp.fromMillis(Date.now());
+  
       await setDoc(newPostRef, {
-        createdAt: serverTimestamp(),
+        createdAt: serverTimestampObj,
         text: postText,
         userID: currentUser.uid,
         image: imageUrl,
+        timestamp:timestamp
       });
+  
+      const newFollowersFeedRef = doc(
+        collection(db, "followers-feed"),
+        currentUser.uid
+      );
+  
+      const recentPosts = {
+        postId: newPostRef.id,
+        published:  timestamp,
+        text: postText
+      };
+  
+      await updateDoc(newFollowersFeedRef, {
+        lastPost: serverTimestampObj,
+        recentPosts: arrayUnion(recentPosts),
+      });
+  
       increaseUpdateSequence();
       setPostText("");
       setSelectedFile(null);
+      handleRemoveClick();
     }
   }
-  
+
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-
 
     if (file) {
       setSelectedFile(file);
@@ -61,10 +76,10 @@ function PostModal(){
       };
     }
   }
-  
+
   function handleRemoveClick() {
     setSelectedFile(null);
-    setFileSource('');
+    setFileSource("");
   }
 
   return (
@@ -75,31 +90,38 @@ function PostModal(){
       </div>
 
       <div className="post-modal-middle">
-        <textarea onChange={(e) => setPostText(e.target.value)} value={postText} />
+        <textarea
+          onChange={(e) => setPostText(e.target.value)}
+          value={postText}
+        />
         <div className="post-modal-image"></div>
       </div>
 
       <div className="post-modal-lower">
-      <label htmlFor="post-photo-choose-btn">
-                <span className="material-symbols-outlined">photo_camera</span>
-              </label>
-      <input
-                className="post-photo-choose-btn"
-                id="post-photo-choose-btn"
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleFileChange}
-              />
-        <div className="post-photo-image-group">
-        
-        {fileSource && <button onClick={handleRemoveClick}>Remove</button>}
-        
-        {fileSource && <img className="post-user-uploaded-image" src={fileSource} alt="user upload"/>}
-        </div>
-
-        <button type="button" onClick={addPost}>
+        <label htmlFor="post-photo-choose-btn">
+          <span className="material-symbols-outlined">photo_camera</span>
+        </label>
+        <input
+          className="post-photo-choose-btn"
+          id="post-photo-choose-btn"
+          type="file"
+          accept="image/png, image/jpeg"
+          onChange={handleFileChange}
+        />
+        <button className="post-modal-btn" type="button" onClick={addPost}>
           Post
         </button>
+        <div className="post-photo-image-group">
+          {fileSource && <button onClick={handleRemoveClick}>Remove</button>}
+
+          {fileSource && (
+            <img
+              className="post-user-uploaded-image"
+              src={fileSource}
+              alt="user upload"
+            />
+          )}
+        </div>
       </div>
     </div>
   );
