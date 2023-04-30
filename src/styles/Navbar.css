@@ -51,8 +51,9 @@ header {
 }
 
 .top-left-logo{
-    width: 35%;
-    height: 35%;
+    width: 15%;
+    height: auto;
+
 }
 
 /* Small screens (up to 599px) */
@@ -113,7 +114,6 @@ header {
         opacity: 1;
         font-size: 1.25rem;
     }
-
 
     header nav {
         position: fixed;

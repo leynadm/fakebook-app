@@ -4,7 +4,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { auth } from "../config/firebase";
 import "../styles/Navbar.css";
 import SearchBar from "./SearchBar";
-import FakeBookLogo from "../assets/fakebook-website-favicon-color.png"
+import FakeBookLogo from "../assets/logo-no-banner-no-background.png"
 function Navbar() {
   const navRef: RefObject<HTMLHeadElement> = useRef<HTMLHeadElement>(null);
 
@@ -17,7 +17,7 @@ function Navbar() {
   return (
     <div>
       <header>
-        <div><img className="top-left-logo" src={FakeBookLogo} alt="logo"/></div>
+        <img className="top-left-logo" src={FakeBookLogo} alt="logo"/>
         <SearchBar />
         <nav ref={navRef}>
           <Link to="/home">

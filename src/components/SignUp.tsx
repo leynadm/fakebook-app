@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext,ChangeEvent } from "react";
+import React, { useState, useEffect, useContext, ChangeEvent } from "react";
 import { AuthContext } from "./Auth";
 import "../styles/SignUp.css";
 import { auth, db } from "../config/firebase";
@@ -14,7 +14,7 @@ function SignUp() {
   const [birthdate, setBirthdate] = useState("");
   const [sex, setSex] = useState("");
 
-  const handleSexChange = (e:ChangeEvent<HTMLInputElement>) => {
+  const handleSexChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSex(e.target.value);
   };
 
@@ -24,7 +24,9 @@ function SignUp() {
     });
   }
 
-  function isFirebaseError(error: unknown): error is { code: string; message: string } {
+  function isFirebaseError(
+    error: unknown
+  ): error is { code: string; message: string } {
     return (
       typeof error === "object" &&
       error !== null &&
@@ -34,9 +36,8 @@ function SignUp() {
       typeof (error as any).message === "string"
     );
   }
-  
 
-  const handleSignUp = async (e:ChangeEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -53,8 +54,8 @@ function SignUp() {
         name: name,
         surname: surname,
         bio: "",
-        verified:false,
-        fullname: arrayUnion(name,surname,name+" " +surname)
+        verified: false,
+        fullname: arrayUnion(name, surname, name + " " + surname),
       });
     } catch (error) {
       if (isFirebaseError(error)) {
@@ -64,8 +65,8 @@ function SignUp() {
       } else {
         console.log("An unknown error occurred:", error);
       }
+    }
   };
-  }
   /* TODO: Set up verification email process
   function VerificationEmail() {
     auth.currentUser.sendEmailVerification().then(() => {
@@ -75,77 +76,111 @@ function SignUp() {
     });
   }
  */
+
   return (
     <div className="signup-wrapper">
-      <div>Sign Up</div>
-      <div>Is fast and easy.</div>
+      <div className="sign-up-main-text">Sign Up</div>
+      <div className="sign-up-secondary-text">Is fast and easy.</div>
+
       <form onSubmit={handleSignUp}>
-        <div className="name-details">
+        <div className="signup-group">
           <input
+            className="signup-input"
             type="text"
-            name="name"
+            name="name-input"
+            required
             onChange={(e) => setName(e.target.value)}
-            placeholder="Add your first name here"
           />
+          <span className="signup-highlight"></span>
+          <span className="signup-bar"></span>
+          <label className="signup-label">Your first name</label>
+        </div>
+        
+        <div className="signup-group">
           <input
+            className="signup-input"
             type="text"
-            name="surname"
+            name="surname-input"
+            required
             onChange={(e) => setSurname(e.target.value)}
-            placeholder="Add your last name here"
           />
+          <span className="signup-highlight"></span>
+          <span className="signup-bar"></span>
+          <label className="signup-label">Your last name</label>
         </div>
-        <input
-          type="email"
-          name="email"
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Add your email address here"
-        />
-        <input
-          type="password"
-          name="password"
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Add your password here"
-        />
-        <div className="other-details">
-          <label>
-            When are you born?
-            <input
-              type="date"
-              name="birthdate"
-              onChange={(e) => setBirthdate(e.target.value)}
-              placeholder="Add your email address here"
-            />
-          </label>
-          <fieldset>
-            <legend>Select your sex</legend>
 
-            <div>
-              <input
-                type="radio"
-                id="male"
-                name="male"
-                value="male"
-                checked={sex === "male"}
-                onChange={handleSexChange}
-              />
-              <label htmlFor="male">Male</label>
-            </div>
-
-            <div>
-              <input
-                type="radio"
-                id="female"
-                name="female"
-                value="female"
-                checked={sex === "female"}
-                onChange={handleSexChange}
-              />
-              <label htmlFor="female">Female</label>
-            </div>
-          </fieldset>
+        <div className="signup-group">
+          <input
+            className="signup-input"
+            type="email"
+            name="email-input"
+          required
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <span className="signup-highlight"></span>
+          <span className="signup-bar"></span>
+          <label className="signup-label">Your email</label>
         </div>
-        <button type="submit">Create my Account</button>
-        <button onClick={addMyDocument}>Register my data!</button>
+
+        <div className="signup-group">
+          <input
+            className="signup-input"
+            type="password"
+            name="password-input"
+          required
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <span className="signup-highlight"></span>
+          <span className="signup-bar"></span>
+          <label className="signup-label">Choose a password</label>
+        </div>
+
+        <div className="signup-group">
+          <input
+            className="signup-input"
+            type="date"
+            name="birthdate-input"
+          required
+            onChange={(e) => setBirthdate(e.target.value)}
+          />
+          <span className="signup-highlight"></span>
+          <span className="signup-bar"></span>
+          <label className="signup-label">Your date of birth</label>
+        </div>
+
+        <fieldset>
+              <legend>Please indicate your sex</legend>
+
+              <div className="option-wrapper">
+                <input
+                  className="option-input"
+                  type="radio"
+                  id="male"
+                  name="male"
+                  value="male"
+                  checked={sex === "male"}
+                  onChange={handleSexChange}
+                />
+                <label className="option-label" htmlFor="male">Male</label>
+              </div>
+
+              <div className="option-wrapper">
+                <input
+                  className="option-input"
+                  type="radio"
+                  id="female"
+                  name="female"
+                  value="female"
+                  checked={sex === "female"}
+                  onChange={handleSexChange}
+                />
+                <label className="option-label" htmlFor="female">Female</label>
+              </div>
+            </fieldset>        
+            
+        <button className="create-account-btn" type="submit">
+          Create my Account
+        </button>
       </form>
     </div>
   );

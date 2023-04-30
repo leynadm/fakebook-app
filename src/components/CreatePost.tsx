@@ -4,10 +4,13 @@ import PostModal from "./PostModal";
 import "../styles/CreatePost.css";
 
 function CreatePost() {
+
   return (
     <div className="create-post-wrapper">
-      {/* <PostInput/> */}
-      <PostModal />
+{/* 
+      <PostInput/> 
+     */}  
+      <PostModal /> 
     </div>
   );
 }

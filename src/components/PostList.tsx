@@ -10,7 +10,7 @@ import {
   documentId,
   Timestamp,
   getDoc,
-  doc
+  doc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { AuthContext } from "./Auth";
@@ -23,7 +23,6 @@ interface FollowedUserData {
   recentPosts: Array<PostData & { id: string }>;
   // Add any other properties you expect to have in the feedData elements
 }
-
 
 function PostList() {
   const { currentUser } = useContext(AuthContext);
@@ -52,18 +51,19 @@ function PostList() {
     // Retrieve the documents that matched the query above
     const followedUsersSnapshot = await getDocs(q);
 
-    // Extract the data from the above query and create an array of objects containing the documents data of the users the logged in user is following 
- 
-    const feedData = followedUsersSnapshot.docs.map((doc) => doc.data());
-    console.log(feedData)
+    // Extract the data from the above query and create an array of objects containing the documents data of the users the logged in user is following
 
-     // Flaten the "recentPosts" array field in the feedData document objects into a single array. The reduce() method iterates over the feedData array and concatenates the recentPosts array of each user into a single array
-      const feedCuratedPosts = feedData.reduce(
-      (accumulator, currentElement) => accumulator.concat(currentElement.recentPosts),
+    const feedData = followedUsersSnapshot.docs.map((doc) => doc.data());
+    console.log(feedData);
+
+    // Flaten the "recentPosts" array field in the feedData document objects into a single array. The reduce() method iterates over the feedData array and concatenates the recentPosts array of each user into a single array
+    const feedCuratedPosts = feedData.reduce(
+      (accumulator, currentElement) =>
+        accumulator.concat(currentElement.recentPosts),
       []
     );
- 
-    console.log(feedCuratedPosts)
+
+    console.log(feedCuratedPosts);
 
     //This line sorts the feedCuratedPosts array in descending order based on the published property of each post.
     const sortedFeedCuratedPosts = feedCuratedPosts.sort(
@@ -72,7 +72,7 @@ function PostList() {
 
     // This line creates an array of post IDs from the sortedFeedCuratedPosts array.
     const postIds = sortedFeedCuratedPosts.map((post: any) => post.postId);
-    
+
     // Creates a query that retrieves the posts from the "posts" collection where the document IDs are contained in the postIds array. Then retrieves the documents that match the query and create an array of objects called postsData
     if (postIds.length > 0) {
       const postsQuery = query(
@@ -81,54 +81,34 @@ function PostList() {
       );
 
       const postsSnapshot = await getDocs(postsQuery);
- 
+
       const postsDataPromises = postsSnapshot.docs.map(async (document) => {
         const postData = document.data() as PostData;
         const userID = postData.userID;
-      
+
         // Query the users collection to retrieve the document with the given userID
         const userDoc = await getDoc(doc(db, "users", userID));
 
         if (userDoc.exists()) {
           // Get the name, surname, imageURL properties from the userDoc
-          const { name, surname} = userDoc.data() as {
+          const { name, surname } = userDoc.data() as {
             name: string;
             surname: string;
           };
-  
-        // Add the name, surname properties to the postData object
-        return {
-          ...postData,
-          name,
-          surname
-        };
-      }
 
+          // Add the name, surname properties to the postData object
+          return {
+            ...postData,
+            name,
+            surname,
+          };
+        }
       });
-      
+
       // Wait for all queries to finish and set the userFeed
       const postsData = await Promise.all(postsDataPromises);
-      console.log('logging posts data now')
-      console.log(postsData)
-       
-      setUserFeed(postsData)
-        
-      /* 
-      setUserFeed(postsData.filter((post): post is PostData => post !== null));
-      
       setUserFeed(postsData);
-       */
-      /* 
-
-      const postsData = postsSnapshot.docs.map((doc) => doc.data() as PostData);
-      console.log(postsData)      
-      setUserFeed(postsData);
-       */
-        
     }
- 
-
-
   }
 
   function getTimeDifference(createdAt: any) {
@@ -167,7 +147,7 @@ function PostList() {
 
   return (
     <div className="posts-wrapper">
-      {userFeed.map((post:PostData, index:number) => (
+      {userFeed.map((post: PostData, index: number) => (
         <div className="post-wrapper" key={index}>
           <div className="post-upper-row">
             <div className="post-upper-row-user-image-wrapper">
@@ -184,13 +164,13 @@ function PostList() {
             <div className="post-upper-row-user-details-wrapper">
               <div className="post-upper-row-user-name">
                 {post.name + " " + post.surname}
-{/* 
+                {/* 
                 {queriedUser
                   ? queriedUser.name + " " + queriedUser.surname
                   : currentUser.displayName}
     
      */}
-                  </div>
+              </div>
 
               <div className="post-upper-row-timestamp">
                 {getTimeDifference(post.createdAt)}
