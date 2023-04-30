@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
 import Navbar from "./Navbar";
 import HomeContent from "./HomeContent";
 import { Routes, Route } from "react-router-dom";
 import SearchResults from "./SearchResults";
 import Profile from "./Profile";
-import { PostContext, PostContextProvider } from "./PostContext";
+import { PostContextProvider } from "./PostContext";
 import SearchProfile from "./SearchProfile";
+import "../styles/Home.css"
 
 const Home = () => {
   return (
-    <div>
+    <div className="home-wrapper">
       <PostContextProvider>
         <Navbar />
         <Routes>

@@ -30,14 +30,16 @@ function SearchResults() {
 
   async function getUsers() {
     console.log("User to search is: " + userToSearch);
-    const q = query(
-      collection(db, "users"),
-      where("fullname", "array-contains", userToSearch)
-    );
+    
+    let q = query(collection(db, "users"));
+    console.log(q)
+    if (userToSearch!=="") {
+      q = query(collection(db, "users"), where("fullname", "array-contains", userToSearch));
+    }
     const querySnapshot = await getDocs(q);
 
     const userResults: UserResult[] = [];
-
+  
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       const user = doc.data() as UserResult;
@@ -48,6 +50,7 @@ function SearchResults() {
     setListOfUsers(userResults);
     console.log(userResults);
   }
+  
 
   return (
     <div className="search-results-wrapper">

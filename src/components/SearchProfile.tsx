@@ -6,7 +6,6 @@ import {
   getDoc,
   collection,
   setDoc,
-  serverTimestamp,
   deleteDoc,
   updateDoc,
   arrayUnion,
@@ -37,7 +36,7 @@ function SearchProfile() {
       console.error("User ID is undefined");
       return;
     }
-
+    
     const followersFeedRef = doc(db, "followers-feed", id);
     const documentSnapshot = await getDoc(followersFeedRef);
 

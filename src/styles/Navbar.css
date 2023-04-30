@@ -47,7 +47,7 @@ header {
     justify-content:space-between;
     height: 6vh;
     padding: 0 1rem;
-
+    background-color: white;
 }
 
 .top-left-logo{

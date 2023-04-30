@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 import PostInput from "./PostInput";
 import PostModal from "./PostModal";
 import "../styles/CreatePost.css";
-import { PostContext } from "./PostContext";
 
 function CreatePost() {
   return (

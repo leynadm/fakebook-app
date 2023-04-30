@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/Profile.css";
 import { AuthContext } from "./Auth";
-import { doc, getDoc,query,collection,where,getDocs } from "firebase/firestore";
+import { doc, getDoc,query,collection,where,getDocs, orderBy } from "firebase/firestore";
 import { db, storage } from "../config/firebase";
 import { ref, uploadBytes, getDownloadURL, list } from "firebase/storage";
 import { User } from "../types/user";
+import { PostData } from "../types/postdata";
 
 import defaultProfileImage from "../assets/default-profile.jpeg";
 import defaultCoverImage from "../assets/default-cover.jpeg";
@@ -16,12 +17,14 @@ function Profile() {
   const [profileImageURL, setProfileImageURL] = useState("");
   const profileImage: HTMLImageElement = new Image();
   profileImage.src = defaultProfileImage;
+  const [userPostsArr, setUserPostsArr] = useState<PostData[]>([])
 
   const [uploadCompleted, setUploadCompleted] = useState(false);
 
   useEffect(() => {
     getProfileImages();
     getProfileData();
+    getUserPosts()
   }, [uploadCompleted]);
 
   async function getProfileImages() {
@@ -78,10 +81,16 @@ function Profile() {
   async function getUserPosts() {
     const q = query(
       collection(db, "posts"),
-      where("userID", "==", currentUser.uid)
+      where("userID", "==", currentUser.uid),orderBy("createdAt","desc")
     );
 
     const querySnapshot = await getDocs(q);
+
+    const userPosts = querySnapshot.docs.map((doc) => doc.data() as PostData);
+
+    setUserPostsArr(userPosts)
+    console.log("logging in userPosts query snapshot map result")
+      console.log(userPosts)
 
     const docRef = doc(db, "users", currentUser.uid);
     const docSnap = await getDoc(docRef);
@@ -179,7 +188,29 @@ function Profile() {
           )}
         </div>
 
-        <div className="profile-content"></div>
+        <div className="profile-content">
+
+        <div className="profile-posts-wrapper">
+      {userPostsArr.map((post, index) => (
+        <div className="profile-post-wrapper" key={index}>
+          <div className="profile-post-upper-row">
+            <div>
+              {queriedUser
+                ? queriedUser.name + " " + queriedUser.surname
+                : currentUser.displayName}
+            </div>
+          </div>
+
+          <div className="profile-post-middle-row">
+            <div className="profile-post-middle-content">{post.text}</div>
+            <img src={post.image} alt="user chosen" />
+          </div>
+          {/* Add rendering for other post properties as needed */}
+        </div>
+      ))}
+    </div>
+
+        </div>
       </div>
     </div>
   );

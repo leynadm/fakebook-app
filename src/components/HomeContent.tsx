@@ -1,4 +1,3 @@
-import React, { useState, useContext } from "react";
 import CreatePost from "./CreatePost";
 import Feed from "./Feed";
 
