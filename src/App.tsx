@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React,{useState} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -8,6 +8,9 @@ import SignUp from "./components/SignUp";
 import AuthRoute from "./components/AuthRoute";
 
 function App() {
+
+  const [firstLoginCheck, setFirstLoginCheck] = useState<any>(null) 
+
   return (
     <div className="App">
       <AuthProvider>

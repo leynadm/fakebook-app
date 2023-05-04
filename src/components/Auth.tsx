@@ -1,13 +1,14 @@
 import React, { useEffect, useState, createContext, ReactNode } from "react";
 import { auth } from "../config/firebase";
 // Create the context to hold the data and share it among all components
-
+import {getAdditionalUserInfo} from "firebase/auth"
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthContext = createContext<any>({
   currentUser:null,
+  userCredential:null
 });
 
 export const AuthProvider = ({ children}:AuthProviderProps ) => {
@@ -18,10 +19,11 @@ export const AuthProvider = ({ children}:AuthProviderProps ) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
-      console.log("currentUser set in AuthProvider:", user);
     });
+
     return unsubscribe;
   }, []);
+
   return (
     <AuthContext.Provider value={{ currentUser }}>
       {children}

@@ -179,11 +179,12 @@ function PostList() {
           </div>
           <div className="post-middle-row">
             <div className="post-middle-content">{post.text}</div>
-            <img
+            {post.image&&<img
               className="post-middle-image"
               src={post.image}
               alt="user chosen"
-            />
+            />}
+            
           </div>
           {/* Add rendering for other post properties as needed */}
         </div>

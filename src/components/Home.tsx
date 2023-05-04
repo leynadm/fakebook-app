@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import Navbar from "./Navbar";
 import HomeContent from "./HomeContent";
 import { Routes, Route } from "react-router-dom";
@@ -6,8 +7,16 @@ import Profile from "./Profile";
 import { PostContextProvider } from "./PostContext";
 import SearchProfile from "./SearchProfile";
 import "../styles/Home.css"
+import { useEffect } from "react";
+import { AuthContext } from "./Auth";
 
-const Home = () => {
+function Home () {
+  const { currentUser } = useContext(AuthContext);
+
+  useEffect(()=>{
+    console.log('loggin in the prop passed to home:')   
+    
+  },[])
   return (
     <div className="home-wrapper">
       <PostContextProvider>

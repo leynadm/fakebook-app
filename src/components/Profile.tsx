@@ -1,30 +1,36 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/Profile.css";
 import { AuthContext } from "./Auth";
-import { doc, getDoc,query,collection,where,getDocs, orderBy } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+  orderBy,
+  Timestamp,
+} from "firebase/firestore";
 import { db, storage } from "../config/firebase";
 import { ref, uploadBytes, getDownloadURL, list } from "firebase/storage";
 import { User } from "../types/user";
 import { PostData } from "../types/postdata";
-
-import defaultProfileImage from "../assets/default-profile.jpeg";
-import defaultCoverImage from "../assets/default-cover.jpeg";
+import PostInput from "./PostInput";
+import PostModal from "./PostModal";
 
 function Profile() {
   const { currentUser } = useContext(AuthContext);
   const [queriedUser, setQueriedUser] = useState<User | undefined>();
   const [coverImageURL, setCoverImageURL] = useState("");
   const [profileImageURL, setProfileImageURL] = useState("");
-  const profileImage: HTMLImageElement = new Image();
-  profileImage.src = defaultProfileImage;
-  const [userPostsArr, setUserPostsArr] = useState<PostData[]>([])
-
+  const [userPostsArr, setUserPostsArr] = useState<PostData[]>([]);
+  const [togglePostModal, setTogglePostModal] = useState<boolean>(false)
   const [uploadCompleted, setUploadCompleted] = useState(false);
 
   useEffect(() => {
     getProfileImages();
     getProfileData();
-    getUserPosts()
+    getUserPosts();
   }, [uploadCompleted]);
 
   async function getProfileImages() {
@@ -41,7 +47,11 @@ function Profile() {
       const imgCoverURLToUse = await getDownloadURL(imgCoverURLRef);
       setCoverImageURL(imgCoverURLToUse);
     } else {
-      setCoverImageURL(defaultCoverImage);
+      console.log(currentUser)
+      if(queriedUser?.coverImage){
+        setCoverImageURL(queriedUser.coverImage);
+      }
+
     }
 
     const imgProfileURLRef = ref(
@@ -59,7 +69,10 @@ function Profile() {
       const imgProfileURLToUse = await getDownloadURL(imgProfileURLRef);
       setProfileImageURL(imgProfileURLToUse);
     } else {
-      setProfileImageURL(defaultProfileImage);
+      if(queriedUser?.profileImage){
+        setProfileImageURL(queriedUser.profileImage);
+      }
+
     }
   }
 
@@ -81,16 +94,17 @@ function Profile() {
   async function getUserPosts() {
     const q = query(
       collection(db, "posts"),
-      where("userID", "==", currentUser.uid),orderBy("createdAt","desc")
+      where("userID", "==", currentUser.uid),
+      orderBy("createdAt", "desc")
     );
 
     const querySnapshot = await getDocs(q);
 
     const userPosts = querySnapshot.docs.map((doc) => doc.data() as PostData);
 
-    setUserPostsArr(userPosts)
-    console.log("logging in userPosts query snapshot map result")
-      console.log(userPosts)
+    setUserPostsArr(userPosts);
+    console.log("logging in userPosts query snapshot map result");
+    console.log(userPosts);
 
     const docRef = doc(db, "users", currentUser.uid);
     const docSnap = await getDoc(docRef);
@@ -133,8 +147,48 @@ function Profile() {
       }
     };
 
+  function getTimeDifference(createdAt: any) {
+    if (createdAt instanceof Timestamp) {
+      // If the createdAt value is a Firebase Timestamp object, convert it to a Date object
+      createdAt = createdAt.toDate();
+    } else if (!(createdAt instanceof Date)) {
+      // If the createdAt value is not a Date object or a Timestamp object, try to parse it as a string
+      const parsedDate = Date.parse(createdAt);
+      if (!isNaN(parsedDate)) {
+        // If the parsed value is a valid date, create a new Date object from it
+        createdAt = new Date(parsedDate);
+      } else {
+        // Otherwise, throw an error
+        throw new Error(`Invalid createdAt value: ${createdAt}`);
+      }
+    }
+
+    const now = new Date();
+    const diffMs = now.getTime() - createdAt.getTime();
+
+    // Convert milliseconds to minutes, hours, and days
+    const diffMinutes = Math.round(diffMs / (1000 * 60));
+    const diffHours = Math.round(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+    // Determine the appropriate format based on the time difference
+    if (diffMinutes < 60) {
+      return `${diffMinutes} minutes ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours} hours ago`;
+    } else {
+      return `${diffDays} days ago`;
+    }
+  }
+
+  function toggleModals(){
+    setTogglePostModal(!togglePostModal)
+  }
+
   return (
     <div className="profile-wrapper">
+
+      {togglePostModal && <PostModal toggleModals={toggleModals} />}
       <div className="profile-wrapper-content">
         <div className="profile-cover-picture">
           <img
@@ -147,6 +201,7 @@ function Profile() {
             <label htmlFor="profile-cover-choose-btn">
               <span className="material-symbols-outlined">photo_camera</span>
             </label>
+
             <input
               className="profile-cover-choose-btn"
               id="profile-cover-choose-btn"
@@ -163,53 +218,89 @@ function Profile() {
                 src={profileImageURL}
                 alt="cover"
               />
-            </div>
 
-            <div className="profile-button">
-              <label htmlFor="profile-photo-choose-btn">
-                <span className="material-symbols-outlined">photo_camera</span>
-              </label>
-              <input
-                className="profile-photo-choose-btn"
-                id="profile-photo-choose-btn"
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleCoverImageUpload("profile")}
-              />
+              <div className="profile-button">
+                <label htmlFor="profile-photo-choose-btn">
+                  <span className="material-symbols-outlined profile-photo-choose-btn-icon">
+                    photo_camera
+                  </span>
+                </label>
+
+                <input
+                  className="profile-photo-choose-btn-input"
+                  id="profile-photo-choose-btn"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={handleCoverImageUpload("profile")}
+                />
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="profile-info-bar">
+      <div className="profile-info-bar">
+        <div className="profile-info-details">
           {currentUser.displayName ? (
-            <div>{currentUser.displayName}</div>
+            <div className="profile-user-name">{currentUser.displayName}</div>
           ) : (
-            <div>{queriedUser?.name + " " + queriedUser?.surname}</div>
-          )}
-        </div>
-
-        <div className="profile-content">
-
-        <div className="profile-posts-wrapper">
-      {userPostsArr.map((post, index) => (
-        <div className="profile-post-wrapper" key={index}>
-          <div className="profile-post-upper-row">
-            <div>
-              {queriedUser
-                ? queriedUser.name + " " + queriedUser.surname
-                : currentUser.displayName}
+            <div className="profile-user-name">
+              {queriedUser?.name + " " + queriedUser?.surname}
             </div>
-          </div>
+          )}
 
-          <div className="profile-post-middle-row">
-            <div className="profile-post-middle-content">{post.text}</div>
-            <img src={post.image} alt="user chosen" />
-          </div>
-          {/* Add rendering for other post properties as needed */}
         </div>
-      ))}
-    </div>
+            
+        <div className="profile-info-bio">Bio</div>
+         
+        {/*<div className="profile-utility-buttons">
+          <button className="profile-utility-edit-btn">Edit Profile</button>
+        </div> */}
+      </div>
 
+
+
+      <PostInput toggleModals={toggleModals} />
+
+      <div className="profile-content">
+        <div className="profile-posts-wrapper">
+          {userPostsArr.map((post, index) => (
+            <div className="profile-post-wrapper" key={index}>
+              <div className="profile-post-upper-row">
+                <div className="profile-post-upper-row-user-image-wrapper">
+                  <img
+                    className="profile-post-upper-row-user-image"
+                    src={profileImageURL}
+                    alt="user profile"
+                  />
+                </div>
+                <div className="profile-post-upper-row-user-details-wrapper">
+                  <div className="profile-post-upper-row-user-name">
+                    {queriedUser
+                      ? queriedUser.name + " " + queriedUser.surname
+                      : currentUser.displayName}
+                  </div>
+
+                  <div className="profile-post-upper-row-timestamp">
+                    {getTimeDifference(post.createdAt)}
+                  </div>
+                </div>
+              </div>
+              <div className="profile-post-middle-row">
+                <div className="profile-post-middle-content">  
+                  {post.text}
+                </div>
+                
+                {post.image&&
+                <img
+                  className="profile-post-middle-image"
+                  src={post.image}
+                  alt="user chosen"
+                />}
+              </div>
+              {/* Add rendering for other post properties as needed */}
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -32,6 +32,12 @@ function Navbar() {
             </button>
           </Link>
 
+          <Link to="/home/settings">
+            <button type="button" className="nav-button">
+              <span className="material-symbols-outlined">settings</span>
+            </button>
+          </Link>
+
           <Link to="/">
             <button className="nav-button" onClick={() => auth.signOut()}>
               {" "}

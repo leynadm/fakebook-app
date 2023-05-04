@@ -47,6 +47,7 @@ function SearchResults() {
       userResults.push(user);
       console.log(doc.id, " => ", doc.data());
     });
+    console.log(userResults)
     setListOfUsers(userResults);
     console.log(userResults);
   }
@@ -66,7 +67,8 @@ function SearchResults() {
           <div>
             <button>Add Friend</button>
           </div>
-          <div></div>
+          <div>
+          </div>
         </div>
       ))}
     </div>

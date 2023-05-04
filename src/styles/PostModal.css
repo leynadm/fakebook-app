@@ -1,10 +1,60 @@
-.post-modal-upper-row{
+.post-modal-wrapper{
+    z-index: 9999;
+    position: fixed;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100vw;
+    height: 100%;
+    background-color:rgba(240,242,245,0.85);
+    overflow: scroll;
 }
 
+.post-modal-upper-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+    margin-bottom: 1rem;
+}
 
+.post-modal-title{
+    font-size: 1.25rem;
+    font-weight: bold;
+    grid-column: 2/3;
+}
+
+.post-modal-additional-title{
+    font-size: 1.25rem;
+}
+
+.post-modal-close-btn{
+    grid-column: 3/3;
+    text-align: right;
+}
+
+.post-model-content{
+    padding: 1rem;
+    background-color: white;
+    width: 80%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border-radius: 2%;
+}
+
+textarea{
+    width: 100%;
+    height: 5rem;
+    border: none;
+    font-size: 1.5rem;
+}
+
+.post-modal-additional{
+    display: flex;
+    justify-content: space-between;
+}
 
 .post-photo-choose-btn {
     width: 0.1px;
@@ -13,6 +63,16 @@
     overflow: hidden;
     position: absolute;
     z-index: -1;
+}
+
+.post-photo-image-remove-btn{
+    background-color: transparent;
+    border: none;
+}
+
+.post-photo-btn-group{
+    width: 100%;
+    text-align: right;
 }
 
 .post-photo-choose-btn+label {
@@ -30,8 +90,8 @@
 
 
 .post-user-uploaded-image{
-    width: 50%;
-    height: 50%;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -42,7 +102,13 @@
     align-items: center;
 }
 
+.post-modal-middle{
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+}
 
+/* 
 .post-modal-btn {
     background-color: #FFFFFF;
     border: 0;
@@ -76,7 +142,43 @@
   .post-modal-btn:focus-visible {
     box-shadow: none;
   }
+ */
+
+ .post-modal-btn {
+    background-color: black;
+    border: 0;
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: white;
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    padding: .75rem 1rem;
+    text-align: center;
+    text-decoration: none #D1D5DB solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 1px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
   
+  .post-modal-btn:hover {
+    background-color: #61777F;
+  }
+  
+  .post-modal-btn:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  
+  .post-modal-btn:focus-visible {
+    box-shadow: none;
+  }
+
+
   .search-profile-follow-group{
       display: flex;
       justify-content: center;

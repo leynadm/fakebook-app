@@ -18,12 +18,6 @@ function SignUp() {
     setSex(e.target.value);
   };
 
-  async function addMyDocument() {
-    await setDoc(doc(db, "users", "Me"), {
-      name: "Me",
-    });
-  }
-
   function isFirebaseError(
     error: unknown
   ): error is { code: string; message: string } {
@@ -56,6 +50,8 @@ function SignUp() {
         bio: "",
         verified: false,
         fullname: arrayUnion(name, surname, name + " " + surname),
+        profileImage:"https://firebasestorage.googleapis.com/v0/b/stalkbook-99d40.appspot.com/o/default-images%2Fdefault-profile-picture.jpg?alt=media&token=0f487134-f813-4975-836c-f32df2eded81",
+        coverImage:"https://firebasestorage.googleapis.com/v0/b/stalkbook-99d40.appspot.com/o/default-images%2Fdefault-cover-picture.jpeg?alt=media&token=e9306795-fffe-4c3e-9a18-3678c8b87cc8"
       });
     } catch (error) {
       if (isFirebaseError(error)) {

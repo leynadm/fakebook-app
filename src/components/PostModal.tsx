@@ -2,11 +2,32 @@ import React, { useState, useEffect, useContext } from "react";
 import "../styles/PostModal.css";
 import { db, storage } from "../config/firebase";
 import { AuthContext } from "./Auth";
-import { collection, setDoc, doc, Timestamp,FieldValue, serverTimestamp, arrayUnion, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  Timestamp,
+  FieldValue,
+  serverTimestamp,
+  arrayUnion,
+  updateDoc,
+  getDoc
+} from "firebase/firestore";
 import { PostContext } from "./PostContext";
 import uuid from "react-uuid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-function PostModal() {
+
+
+interface PostModalProps {
+  toggleModals: () => void;
+}
+
+function PostModal(props:PostModalProps) {
+
+  function handleUserClose(){
+    props.toggleModals()
+  }
+
   const { increaseUpdateSequence } = useContext(PostContext);
   const { currentUser } = useContext(AuthContext);
   const [postText, setPostText] = useState("");
@@ -25,36 +46,49 @@ function PostModal() {
         await uploadBytes(imageRef, selectedFile);
         imageUrl = await getDownloadURL(imageRef);
       }
-  
+
       const newPostRef = doc(collection(db, "posts"));
-  
-      const serverTimestampObj = serverTimestamp()
+
+      const serverTimestampObj = serverTimestamp();
       const timestamp = Timestamp.fromMillis(Date.now());
-  
+
       await setDoc(newPostRef, {
         createdAt: serverTimestampObj,
         text: postText,
         userID: currentUser.uid,
         image: imageUrl,
-        timestamp:timestamp
+        timestamp: timestamp,
       });
-  
+
       const newFollowersFeedRef = doc(
         collection(db, "followers-feed"),
         currentUser.uid
       );
-  
+
+      const followersFeedDoc = await getDoc(newFollowersFeedRef);
+
       const recentPosts = {
         postId: newPostRef.id,
-        published:  timestamp,
-        text: postText
+        published: timestamp,
+        text: postText,
       };
-  
-      await updateDoc(newFollowersFeedRef, {
-        lastPost: serverTimestampObj,
-        recentPosts: arrayUnion(recentPosts),
-      });
-  
+
+      if (!followersFeedDoc.exists()) {
+        // create the document if it doesn't exist
+        await setDoc(newFollowersFeedRef, {
+          lastPost: serverTimestampObj,
+          recentPosts: arrayUnion(recentPosts),
+          users:[]
+        });
+      } else {
+        await updateDoc(newFollowersFeedRef, {
+          lastPost: serverTimestampObj,
+          recentPosts: arrayUnion(recentPosts),
+        });
+      }
+
+      handleUserClose()
+
       increaseUpdateSequence();
       setPostText("");
       setSelectedFile(null);
@@ -84,43 +118,62 @@ function PostModal() {
 
   return (
     <div className="post-modal-wrapper">
-      <div className="post-modal-upper-row">
-        <div>Create Post</div>
-        <span>X</span>
-      </div>
+      <div className="post-model-content">
+        <div className="post-modal-upper-row">
+          <div className="post-modal-title">Create Post</div>
 
-      <div className="post-modal-middle">
-        <textarea
-          onChange={(e) => setPostText(e.target.value)}
-          value={postText}
-        />
-        <div className="post-modal-image"></div>
-      </div>
+          <span className="material-symbols-outlined post-modal-close-btn" onClick={handleUserClose}>
+            cancel
+          </span>
+        </div>
 
-      <div className="post-modal-lower">
-        <label htmlFor="post-photo-choose-btn">
-          <span className="material-symbols-outlined">photo_camera</span>
-        </label>
-        <input
-          className="post-photo-choose-btn"
-          id="post-photo-choose-btn"
-          type="file"
-          accept="image/png, image/jpeg"
-          onChange={handleFileChange}
-        />
-        <button className="post-modal-btn" type="button" onClick={addPost}>
-          Post
-        </button>
-        <div className="post-photo-image-group">
-          {fileSource && <button onClick={handleRemoveClick}>Remove</button>}
+        <div className="post-modal-middle">
+          <textarea
+            onChange={(e) => setPostText(e.target.value)}
+            value={postText}
+            placeholder="What's on your mind today?"
+          />
 
-          {fileSource && (
-            <img
-              className="post-user-uploaded-image"
-              src={fileSource}
-              alt="user upload"
+          <div className="post-photo-image-group">
+            <div className="post-photo-btn-group">
+            {fileSource && <button className="post-photo-image-remove-btn" onClick={handleRemoveClick}><span className="material-symbols-outlined">
+delete
+</span></button>}
+</div>
+            {fileSource && (
+              <img
+                className="post-user-uploaded-image"
+                src={fileSource}
+                alt="user upload"
+              />
+            )}
+          </div>
+        </div>
+
+        <div className="post-modal-additional">
+          <div className="post-modal-additional-title">Add to your post</div>
+
+          <div className="photo-upload-group">
+            
+            <label htmlFor="post-photo-choose-btn">
+              <span className="material-symbols-outlined">image</span>
+            </label>
+            <input
+              className="post-photo-choose-btn"
+              id="post-photo-choose-btn"
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={handleFileChange}
             />
-          )}
+          </div>
+        
+        </div>
+
+        <div className="post-modal-lower">
+          
+          <button className="post-modal-btn" type="button" onClick={addPost}>
+            Post
+          </button>
         </div>
       </div>
     </div>
