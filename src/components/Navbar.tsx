@@ -22,26 +22,26 @@ function Navbar() {
         <nav ref={navRef}>
           <Link to="/home">
             <button type="button" className="nav-button">
-              <span className="material-symbols-outlined">home</span>
+              <span className="material-symbols-outlined nav-icon" >home</span>
             </button>
           </Link>
 
           <Link to="/home/profile">
             <button type="button" className="nav-button">
-              <span className="material-symbols-outlined">account_circle</span>
+              <span className="material-symbols-outlined nav-icon">account_circle</span>
             </button>
           </Link>
 
           <Link to="/home/settings">
             <button type="button" className="nav-button">
-              <span className="material-symbols-outlined">settings</span>
+              <span className="material-symbols-outlined nav-icon">settings</span>
             </button>
           </Link>
 
           <Link to="/">
             <button className="nav-button" onClick={() => auth.signOut()}>
               {" "}
-              <span className="material-symbols-outlined">logout</span>
+              <span className="material-symbols-outlined nav-icon">logout</span>
             </button>
           </Link>
           <button className="nav-btn nav-close-btn" onClick={showNavbar}>

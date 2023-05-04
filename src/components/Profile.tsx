@@ -10,86 +10,70 @@ import {
   getDocs,
   orderBy,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { db, storage } from "../config/firebase";
 import { ref, uploadBytes, getDownloadURL, list } from "firebase/storage";
+import type { StorageReference } from "firebase/storage";
 import { User } from "../types/user";
 import { PostData } from "../types/postdata";
 import PostInput from "./PostInput";
 import PostModal from "./PostModal";
-
+  
 function Profile() {
   const { currentUser } = useContext(AuthContext);
   const [queriedUser, setQueriedUser] = useState<User | undefined>();
   const [coverImageURL, setCoverImageURL] = useState("");
   const [profileImageURL, setProfileImageURL] = useState("");
   const [userPostsArr, setUserPostsArr] = useState<PostData[]>([]);
-  const [togglePostModal, setTogglePostModal] = useState<boolean>(false)
-  const [uploadCompleted, setUploadCompleted] = useState(false);
-
+  const [togglePostModal, setTogglePostModal] = useState<boolean>(false);
+  const [uploadCount, setUploadCount] = useState(0);
+  
   useEffect(() => {
-    getProfileImages();
-    getProfileData();
-    getUserPosts();
-  }, [uploadCompleted]);
+    fetchProfileDataAndImages().then(() => {
+      getUserPosts();
+    });
+  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadCount]);
 
-  async function getProfileImages() {
-    const imgCoverURLRef = ref(
-      storage,
-      `cover-images/${currentUser.uid}/${currentUser.uid + "user_cover_image"}`
-    );
-
-    const coverImageList = await list(
-      ref(storage, `cover-images/${currentUser.uid}`)
-    );
-
-    if (coverImageList.items.length > 0) {
-      const imgCoverURLToUse = await getDownloadURL(imgCoverURLRef);
-      setCoverImageURL(imgCoverURLToUse);
-    } else {
-      console.log(currentUser)
-      if(queriedUser?.coverImage){
-        setCoverImageURL(queriedUser.coverImage);
-      }
-
-    }
-
-    const imgProfileURLRef = ref(
-      storage,
-      `profile-images/${currentUser.uid}/${
-        currentUser.uid + "user_profile_image"
-      }`
-    );
-
-    const profileImageList = await list(
-      ref(storage, `profile-images/${currentUser.uid}`)
-    );
-
-    if (profileImageList.items.length > 0) {
-      const imgProfileURLToUse = await getDownloadURL(imgProfileURLRef);
-      setProfileImageURL(imgProfileURLToUse);
-    } else {
-      if(queriedUser?.profileImage){
-        setProfileImageURL(queriedUser.profileImage);
-      }
-
-    }
-  }
-
-  async function getProfileData() {
+  async function fetchProfileDataAndImages() {
     const docRef = doc(db, "users", currentUser.uid);
     const docSnap = await getDoc(docRef);
-
+  
     if (docSnap.exists()) {
-      //console.log("Document data:", docSnap.data());
       const userData = docSnap.data() as User;
       setQueriedUser(userData);
-      console.log(userData);
+  
+      // Fetch the cover and profile images
+      const coverImageRef = ref(storage, `cover-images/${currentUser.uid}/${currentUser.uid}user_cover_image`);
+      const profileImageRef = ref(storage, `profile-images/${currentUser.uid}/${currentUser.uid}user_profile_image`);
+  
+      try {
+        const coverImageURL = await getDownloadURL(coverImageRef);
+        setCoverImageURL(coverImageURL);
+      } catch (error) {
+        console.error("Error fetching cover image:", error);
+        if (userData.coverImage) {
+          setCoverImageURL(userData.coverImage);
+        }
+      }
+  
+      try {
+        const profileImageURL = await getDownloadURL(profileImageRef);
+        setProfileImageURL(profileImageURL);
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+        if (userData.profileImage) {
+          setProfileImageURL(userData.profileImage);
+        }
+      }
     } else {
-      // docSnap.data() will be undefined in this case
       console.log("No such document!");
     }
   }
+
+
 
   async function getUserPosts() {
     const q = query(
@@ -121,17 +105,17 @@ function Profile() {
       const file = event.target.files?.[0];
       if (!file) return;
 
-      let coverImageRef;
+      let imageRef: StorageReference | null = null;
 
       if (updateType === "cover") {
-        coverImageRef = ref(
+        imageRef = ref(
           storage,
           `cover-images/${currentUser.uid}/${
             currentUser.uid + "user_cover_image"
           }`
         );
       } else if (updateType === "profile") {
-        coverImageRef = ref(
+        imageRef = ref(
           storage,
           `profile-images/${currentUser.uid}/${
             currentUser.uid + "user_profile_image"
@@ -139,14 +123,38 @@ function Profile() {
         );
       }
 
-      if (coverImageRef !== undefined) {
-        uploadBytes(coverImageRef, file).then(() => {
-          setUploadCompleted(true);
+      if (imageRef) {
+        uploadBytes(imageRef, file).then(() => {
           alert("Image uploaded!");
+          updateUserImages(updateType, imageRef, currentUser.uid);
         });
       }
     };
 
+  async function updateUserImages(
+    linkType: string,
+    imageRef: any,
+    userID: string
+  ) {
+    const newImageURL = await getDownloadURL(imageRef);
+
+    if (linkType === "profile") {
+      await updateDoc(doc(db, "users", userID), {
+        profileImage: newImageURL,
+      });
+    } else {
+      await updateDoc(doc(db, "users", userID), {
+        coverImage: newImageURL,
+      });
+    }
+
+    onUploadPerformed();
+  }
+
+  function onUploadPerformed() {
+    setUploadCount(uploadCount + 1);
+  }
+  
   function getTimeDifference(createdAt: any) {
     if (createdAt instanceof Timestamp) {
       // If the createdAt value is a Firebase Timestamp object, convert it to a Date object
@@ -181,14 +189,16 @@ function Profile() {
     }
   }
 
-  function toggleModals(){
-    setTogglePostModal(!togglePostModal)
+  function toggleModals() {
+    setTogglePostModal(!togglePostModal);
   }
 
   return (
     <div className="profile-wrapper">
 
-      {togglePostModal && <PostModal toggleModals={toggleModals} />}
+
+{togglePostModal && <PostModal toggleModals={toggleModals} onUploadPerformed={onUploadPerformed}/>}
+
       <div className="profile-wrapper-content">
         <div className="profile-cover-picture">
           <img
@@ -248,17 +258,14 @@ function Profile() {
               {queriedUser?.name + " " + queriedUser?.surname}
             </div>
           )}
-
         </div>
-            
+
         <div className="profile-info-bio">Bio</div>
-         
+
         {/*<div className="profile-utility-buttons">
           <button className="profile-utility-edit-btn">Edit Profile</button>
         </div> */}
       </div>
-
-
 
       <PostInput toggleModals={toggleModals} />
 
@@ -287,16 +294,15 @@ function Profile() {
                 </div>
               </div>
               <div className="profile-post-middle-row">
-                <div className="profile-post-middle-content">  
-                  {post.text}
-                </div>
-                
-                {post.image&&
-                <img
-                  className="profile-post-middle-image"
-                  src={post.image}
-                  alt="user chosen"
-                />}
+                <div className="profile-post-middle-content">{post.text}</div>
+
+                {post.image && (
+                  <img
+                    className="profile-post-middle-image"
+                    src={post.image}
+                    alt="user chosen"
+                  />
+                )}
               </div>
               {/* Add rendering for other post properties as needed */}
             </div>

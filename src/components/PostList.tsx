@@ -91,9 +91,11 @@ function PostList() {
 
         if (userDoc.exists()) {
           // Get the name, surname, imageURL properties from the userDoc
-          const { name, surname } = userDoc.data() as {
+          const { name, surname,profileImage } = userDoc.data() as {
             name: string;
             surname: string;
+            profileImage:string;
+
           };
 
           // Add the name, surname properties to the postData object
@@ -101,6 +103,7 @@ function PostList() {
             ...postData,
             name,
             surname,
+            profileImage
           };
         }
       });
@@ -156,7 +159,7 @@ function PostList() {
                 src={
                   /* queriedUser
   ? queriedUser.image
-  : */ currentUser.photoURL
+  : */ post.profileImage
                 }
                 alt="user profile"
               />

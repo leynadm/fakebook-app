@@ -158,12 +158,12 @@
 .profile-photo-choose-btn+label:hover {
     background-color: red;
 }
-
+ 
 .profile-photo-image {
-    max-width: 100%;
-    max-height: 100%;
     object-fit:cover;
     border-radius: 50%;
+    width: 7rem;
+    height: 7rem;
 }
 
 .profile-posts-wrapper{
@@ -248,6 +248,7 @@
     justify-content: flex-start;
     align-items: center;
     margin-top: 1rem;
+    border-bottom: 1px  lightgray solid;
 }
 
 .profile-post-upper-row-user-image-wrapper{
@@ -260,6 +261,7 @@
     border-radius: 50%;
     width: 3rem;
     height: 3rem;
+    object-fit: cover;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
     margin-left: 1rem;
     margin-right: 1rem;

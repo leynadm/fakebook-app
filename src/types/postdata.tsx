@@ -8,4 +8,5 @@ export type PostData = {
     name?:string
     surname?:string,
     timestamp?:any
+    profileImage:string
   };

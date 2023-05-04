@@ -15,6 +15,7 @@ interface UserResult {
   name: string;
   surname: string;
   id?: string;
+  profileImage:string
 }
 
 function SearchResults() {
@@ -47,6 +48,7 @@ function SearchResults() {
       userResults.push(user);
       console.log(doc.id, " => ", doc.data());
     });
+    console.log('logging in user results')
     console.log(userResults)
     setListOfUsers(userResults);
     console.log(userResults);
@@ -55,17 +57,22 @@ function SearchResults() {
 
   return (
     <div className="search-results-wrapper">
-      <div>People</div>
+
       {listOfUsers.map((userResult, index) => (
         <div key={index} className="search-result-group">
-          <div>
-            <Link to={`users/${userResult.id}`}>
+          
+          <div className="user-result-profile-image-wrapper">
+          <img className="user-result-profile-image" src={userResult.profileImage} alt="user"/>
+          </div>
+          <div className="search-result-user">
+            <Link to={`users/${userResult.id}`} className="search-result-user-link">
               {userResult.name} {userResult.surname}
             </Link>
           </div>
 
           <div>
-            <button>Add Friend</button>
+            <button type="button" className="search-result-follow-btn">Follow</button>
+            
           </div>
           <div>
           </div>

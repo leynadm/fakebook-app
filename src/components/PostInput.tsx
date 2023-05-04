@@ -12,26 +12,14 @@ function PostInput (props:PostInputProps) {
 
   const { currentUser } = useContext(AuthContext);
 
-  const [userName, setUserName] = useState("");
-  
   function handleUserClick(){
     props.toggleModals()
   }
 
-  useEffect(() => {
-    if (currentUser) {
-      setUserName(currentUser.email);
-      console.log(currentUser)
-    }
-  }, [currentUser, userName]);
-
   return (
     <div className="post-input-wrappper">
-
-        <img className="post-input-image" src={defaultProfileImage} alt="user"/>
-        <input className="post-input-field" type="text" placeholder={`What's on your mind, ${userName}?`} onClick={handleUserClick} />
-        <span className="material-symbols-outlined">image</span>
-     
+        <span className="material-symbols-outlined" onClick={handleUserClick}>forum</span>     
+        <input className="post-input-field" type="text" placeholder={`Tell us what's happening, ${currentUser.displayName}?`} onClick={handleUserClick} />
     </div>
   );
 }

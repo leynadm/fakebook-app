@@ -2,15 +2,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
     padding: 0.5rem;
+    min-width: 100%;
+    padding-left: 5rem;
+    padding-right: 5rem;
 }
 
-.post-input-image{
-    border-radius: 50%;
-    width: 3rem;
-}
+ 
 .post-input-field{
-    width: 70%;
+    color: black;
+    font-family: 'Source Sans Pro', sans-serif;
+    width: 100%;
+    text-align: center;
+    background-color: lightblue;
+    border-top-right-radius: 2rem;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+    border: none;
 }
+

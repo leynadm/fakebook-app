@@ -19,13 +19,15 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 
 interface PostModalProps {
+  
   toggleModals: () => void;
+  onUploadPerformed?: () => void;
 }
 
-function PostModal(props:PostModalProps) {
+function PostModal({toggleModals,onUploadPerformed}:PostModalProps) {
 
   function handleUserClose(){
-    props.toggleModals()
+    toggleModals()
   }
 
   const { increaseUpdateSequence } = useContext(PostContext);
@@ -88,12 +90,16 @@ function PostModal(props:PostModalProps) {
       }
 
       handleUserClose()
-
       increaseUpdateSequence();
       setPostText("");
       setSelectedFile(null);
       handleRemoveClick();
-    }
+            // Update the uploadCompleted state in the Profile component
+            if(onUploadPerformed){
+              onUploadPerformed()
+            }
+            
+        }
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {

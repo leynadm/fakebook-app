@@ -11,7 +11,8 @@ import { AuthContext } from "./Auth";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
 import { setDoc, doc, arrayUnion,getDoc} from "firebase/firestore";
-
+import { User } from "../types/user";
+  
 function Login() {
   const userAuth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -70,10 +71,6 @@ function Login() {
           if(newUserCheck?.isNewUser){
             createUserDoc(user.uid,user.displayName)
           }
-          console.log('logging in the additional login user check:')
-          console.log(newUserCheck)
-          console.log('logging in the login user object:')
-   
            // Query the users collection to retrieve the document with the given userID
            
            

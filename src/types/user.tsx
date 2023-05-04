@@ -6,6 +6,6 @@ export interface User {
     surname: string;
     bio?:string
     verified:boolean,
-    profileImage?:string,
-    coverImage?:string
+    profileImage:string,
+    coverImage:string
   }

@@ -20,12 +20,9 @@
 }
 
 .search-bar-input{
+    font-family: 'Source Sans Pro', sans-serif;
     border: none;
-    background-color: lightgray;
-    border-top-right-radius: 2rem;
-    border-top-left-radius: 2rem;
-    border-bottom-left-radius: 2rem;
-    border-bottom-right-radius: 2rem;
     padding: 0.5rem;
-
+    max-width: 50%;
+    max-height: 10%;
 }
