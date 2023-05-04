@@ -4,15 +4,15 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
-  getAdditionalUserInfo
+  getAdditionalUserInfo,
 } from "firebase/auth";
-import { auth,db  } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { AuthContext } from "./Auth";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
-import { setDoc, doc, arrayUnion,getDoc} from "firebase/firestore";
+import { setDoc, doc, arrayUnion, getDoc } from "firebase/firestore";
 import { User } from "../types/user";
-  
+
 function Login() {
   const userAuth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -65,15 +65,14 @@ function Login() {
           const token = credential.accessToken;
           // The signed-in user info.
           const user = result.user;
-          console.log('logging in result:')
-          console.log(result)
-          const newUserCheck = getAdditionalUserInfo(result)
-          if(newUserCheck?.isNewUser){
-            createUserDoc(user.uid,user.displayName)
+          console.log("logging in result:");
+          console.log(result);
+          const newUserCheck = getAdditionalUserInfo(result);
+          if (newUserCheck?.isNewUser) {
+            createUserDoc(user.uid, user.displayName);
           }
-           // Query the users collection to retrieve the document with the given userID
-           
-           
+          // Query the users collection to retrieve the document with the given userID
+
           // IdP data available using getAdditionalUserInfo(result)
           // ...
         }
@@ -90,34 +89,25 @@ function Login() {
       });
   }
 
-
-  async function createUserDoc(userID:string, fullname:string|null){
-    
+  async function createUserDoc(userID: string, fullname: string | null) {
     const userDoc = await getDoc(doc(db, "users", userID));
 
     if (!userDoc.exists()) {
- 
-    await setDoc(doc(db, "users", userID), {
-      sex: "",
-      birthdate: new Date(1800, 1, 30),
-      name: "",
-      surname: "",
-      bio: "",
-      verified: false,
-      fullname: arrayUnion("","",fullname),
-      profileImage:"https://firebasestorage.googleapis.com/v0/b/stalkbook-99d40.appspot.com/o/default-images%2Fdefault-profile-picture.jpg?alt=media&token=0f487134-f813-4975-836c-f32df2eded81",
-      coverImage:"https://firebasestorage.googleapis.com/v0/b/stalkbook-99d40.appspot.com/o/default-images%2Fdefault-cover-picture.jpeg?alt=media&token=e9306795-fffe-4c3e-9a18-3678c8b87cc8"
-    });
-    
-  };
-
-  
-
+      await setDoc(doc(db, "users", userID), {
+        sex: "",
+        birthdate: new Date(1800, 1, 30),
+        name: "",
+        surname: "",
+        bio: "",
+        verified: false,
+        fullname: arrayUnion("", "", fullname),
+        profileImage:
+          "https://firebasestorage.googleapis.com/v0/b/stalkbook-99d40.appspot.com/o/default-images%2Fdefault-profile-picture.jpg?alt=media&token=0f487134-f813-4975-836c-f32df2eded81",
+        coverImage:
+          "https://firebasestorage.googleapis.com/v0/b/stalkbook-99d40.appspot.com/o/default-images%2Fdefault-cover-picture.jpeg?alt=media&token=e9306795-fffe-4c3e-9a18-3678c8b87cc8",
+      });
+    }
   }
-
-
-
-
 
   /* Sign in with email and password */
 
@@ -138,16 +128,14 @@ function Login() {
 
   return (
     <div className="login-wrapper">
-
       <div className="login-wrapper-top">
         <div className="brand-name">fakebook</div>
         <div className="brand-slogan">{slogan}</div>
 
         <form onSubmit={handleLogIn}>
-          
           <div className="login-group">
             <input
-            className="login-input"
+              className="login-input"
               type="email"
               name="email"
               onChange={(e) => setEmail(e.target.value)}
@@ -197,7 +185,15 @@ function Login() {
       </div>
 
       <div className="login-wrapper-bottom">
-        <div className="login-wrapper-info">This app has been created by Daniel Matei (me)<br></br> as the final project of The Odin Project's Javascript module.<br></br><br></br> I would claim that all rights are reserved, but the truth is I didn't reserve any. <br></br> You are welcome to join the app and use it in good faith.<br></br><br></br>You can check my github or LinkedIn profiles to get in touch,<br></br> or email me at matei_daniel@outlook.com.</div>
+        <div className="login-wrapper-info">
+          This app has been created by Daniel Matei (me)<br></br> as the final
+          project of The Odin Project's Javascript module.<br></br>
+          <br></br> I would claim that all rights are reserved, but the truth is
+          I didn't reserve any. <br></br> You are welcome to join the app and
+          use it in good faith.<br></br>
+          <br></br>You can check my github or LinkedIn profiles to get in touch,
+          <br></br> or email me at matei_daniel@outlook.com.
+        </div>
       </div>
     </div>
   );

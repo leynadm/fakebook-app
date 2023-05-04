@@ -15,7 +15,8 @@ interface UserResult {
   name: string;
   surname: string;
   id?: string;
-  profileImage:string
+  profileImage:string;
+  fullname:[];
 }
 
 function SearchResults() {
@@ -66,7 +67,14 @@ function SearchResults() {
           </div>
           <div className="search-result-user">
             <Link to={`users/${userResult.id}`} className="search-result-user-link">
-              {userResult.name} {userResult.surname}
+            <p>
+      {
+        (userResult.name && userResult.surname)
+          ? userResult.name + " " + userResult.surname
+          : userResult.fullname
+      }
+    </p>              
+              
             </Link>
           </div>
 

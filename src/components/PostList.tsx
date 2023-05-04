@@ -27,9 +27,7 @@ interface FollowedUserData {
 function PostList() {
   const { currentUser } = useContext(AuthContext);
   const { updateKey } = useContext(PostContext);
-
   const [userFeed, setUserFeed] = useState<any>([]);
-
   const [queriedUser, setQueriedUser] = useState<User | undefined>();
 
   useEffect(() => {
@@ -45,7 +43,7 @@ function PostList() {
       followedUsersRef,
       where("users", "array-contains", currentUser.uid),
       orderBy("lastPost", "desc"),
-      limit(10)
+      limit(2)
     );
 
     // Retrieve the documents that matched the query above
@@ -53,8 +51,7 @@ function PostList() {
 
     // Extract the data from the above query and create an array of objects containing the documents data of the users the logged in user is following
 
-    const feedData = followedUsersSnapshot.docs.map((doc) => doc.data());
-    console.log(feedData);
+    let feedData = followedUsersSnapshot.docs.map((doc) => doc.data());
 
     // Flaten the "recentPosts" array field in the feedData document objects into a single array. The reduce() method iterates over the feedData array and concatenates the recentPosts array of each user into a single array
     const feedCuratedPosts = feedData.reduce(
@@ -63,54 +60,95 @@ function PostList() {
       []
     );
 
-    console.log(feedCuratedPosts);
-
-    //This line sorts the feedCuratedPosts array in descending order based on the published property of each post.
-    const sortedFeedCuratedPosts = feedCuratedPosts.sort(
-      (a: any, b: any) => b.published - a.published
-    );
-
+    const sortedFeedCuratedPosts = feedCuratedPosts.sort((a: any, b: any) => {
+      const dateA = new Date(a.published);
+      const dateB = new Date(b.published);
+      return dateA.getTime() - dateB.getTime();
+    });
     // This line creates an array of post IDs from the sortedFeedCuratedPosts array.
     const postIds = sortedFeedCuratedPosts.map((post: any) => post.postId);
 
-    // Creates a query that retrieves the posts from the "posts" collection where the document IDs are contained in the postIds array. Then retrieves the documents that match the query and create an array of objects called postsData
-    if (postIds.length > 0) {
-      const postsQuery = query(
-        collection(db, "posts"),
-        where(documentId(), "in", postIds)
+    const documentIds: string[] = [];
+
+    followedUsersSnapshot.forEach((doc) => {
+      documentIds.push(doc.id);
+    });
+
+    // Slice the postIds array into chunks of 10 or less
+    const chunks = [];
+    for (let i = 0; i < documentIds.length; i += 10) {
+      chunks.push(documentIds.slice(i, i + 10));
+    }
+
+    const usersData: any[] = [];
+
+    for (const chunk of chunks) {
+      const usersQuery = query(
+        collection(db, "users"),
+        where(documentId(), "in", chunk)
       );
+      const usersSnapshot = await getDocs(usersQuery);
 
-      const postsSnapshot = await getDocs(postsQuery);
+      usersSnapshot.forEach((doc) => {
+        const userData = { id: doc.id, ...doc.data() }; // Include the document ID
+        usersData.push(userData);
+      });
+    }
 
-      const postsDataPromises = postsSnapshot.docs.map(async (document) => {
-        const postData = document.data() as PostData;
-        const userID = postData.userID;
+    if (postIds.length > 0) {
+      const batchedPostIds = [];
 
-        // Query the users collection to retrieve the document with the given userID
-        const userDoc = await getDoc(doc(db, "users", userID));
+      for (let i = 0; i < postIds.length; i += 10) {
+        batchedPostIds.push(postIds.slice(i, i + 10));
+      }
 
-        if (userDoc.exists()) {
-          // Get the name, surname, imageURL properties from the userDoc
-          const { name, surname,profileImage } = userDoc.data() as {
-            name: string;
-            surname: string;
-            profileImage:string;
+      const batchedPostsData: PostData[] = [];
 
-          };
+      for (const batch of batchedPostIds) {
+        const postsQuery = query(
+          collection(db, "posts"),
+          where(documentId(), "in", batch)
+        );
 
-          // Add the name, surname properties to the postData object
+        const postsSnapshot = await getDocs(postsQuery);
+
+        postsSnapshot.forEach((doc) => {
+          batchedPostsData.push(doc.data() as PostData);
+        });
+      }
+
+      const userIdToUserData: { [key: string]: any } = {};
+      usersData.forEach((userData) => {
+        const userId = userData.id;
+        userIdToUserData[userId] = userData;
+      });
+
+      console.log("logging userId to userData");
+      console.log(userIdToUserData);
+
+      const postsDataBatch: any = batchedPostsData.map(async (post: any) => {
+        const userID = post.userID;
+
+        // Check if the user data is available in the mapping
+        if (userIdToUserData.hasOwnProperty(userID)) {
+          const { name, surname, profileImage } = userIdToUserData[userID];
+
+          // Add the name, surname, and profileImage properties to the postData object
           return {
-            ...postData,
+            ...post,
             name,
             surname,
-            profileImage
+            profileImage,
           };
         }
       });
 
-      // Wait for all queries to finish and set the userFeed
-      const postsData = await Promise.all(postsDataPromises);
-      setUserFeed(postsData);
+      const feedBatchPostData = await Promise.all(postsDataBatch);
+
+      const sortedFeedBatchPostData = feedBatchPostData.sort(
+        (a: any, b: any) => b.createdAt - a.createdAt
+      );
+      setUserFeed(sortedFeedBatchPostData);
     }
   }
 
@@ -167,12 +205,12 @@ function PostList() {
             <div className="post-upper-row-user-details-wrapper">
               <div className="post-upper-row-user-name">
                 {post.name + " " + post.surname}
+
                 {/* 
                 {queriedUser
                   ? queriedUser.name + " " + queriedUser.surname
                   : currentUser.displayName}
-    
-     */}
+              */}
               </div>
 
               <div className="post-upper-row-timestamp">
@@ -182,12 +220,13 @@ function PostList() {
           </div>
           <div className="post-middle-row">
             <div className="post-middle-content">{post.text}</div>
-            {post.image&&<img
-              className="post-middle-image"
-              src={post.image}
-              alt="user chosen"
-            />}
-            
+            {post.image && (
+              <img
+                className="post-middle-image"
+                src={post.image}
+                alt="user chosen"
+              />
+            )}
           </div>
           {/* Add rendering for other post properties as needed */}
         </div>

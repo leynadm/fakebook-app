@@ -19,7 +19,7 @@ import { User } from "../types/user";
 import { PostData } from "../types/postdata";
 import PostInput from "./PostInput";
 import PostModal from "./PostModal";
-  
+
 function Profile() {
   const { currentUser } = useContext(AuthContext);
   const [queriedUser, setQueriedUser] = useState<User | undefined>();
@@ -28,27 +28,33 @@ function Profile() {
   const [userPostsArr, setUserPostsArr] = useState<PostData[]>([]);
   const [togglePostModal, setTogglePostModal] = useState<boolean>(false);
   const [uploadCount, setUploadCount] = useState(0);
-  
+
   useEffect(() => {
     fetchProfileDataAndImages().then(() => {
       getUserPosts();
     });
-  
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadCount]);
 
   async function fetchProfileDataAndImages() {
     const docRef = doc(db, "users", currentUser.uid);
     const docSnap = await getDoc(docRef);
-  
+
     if (docSnap.exists()) {
       const userData = docSnap.data() as User;
       setQueriedUser(userData);
-  
+
       // Fetch the cover and profile images
-      const coverImageRef = ref(storage, `cover-images/${currentUser.uid}/${currentUser.uid}user_cover_image`);
-      const profileImageRef = ref(storage, `profile-images/${currentUser.uid}/${currentUser.uid}user_profile_image`);
-  
+      const coverImageRef = ref(
+        storage,
+        `cover-images/${currentUser.uid}/${currentUser.uid}user_cover_image`
+      );
+      const profileImageRef = ref(
+        storage,
+        `profile-images/${currentUser.uid}/${currentUser.uid}user_profile_image`
+      );
+
       try {
         const coverImageURL = await getDownloadURL(coverImageRef);
         setCoverImageURL(coverImageURL);
@@ -58,7 +64,7 @@ function Profile() {
           setCoverImageURL(userData.coverImage);
         }
       }
-  
+
       try {
         const profileImageURL = await getDownloadURL(profileImageRef);
         setProfileImageURL(profileImageURL);
@@ -72,8 +78,6 @@ function Profile() {
       console.log("No such document!");
     }
   }
-
-
 
   async function getUserPosts() {
     const q = query(
@@ -154,7 +158,7 @@ function Profile() {
   function onUploadPerformed() {
     setUploadCount(uploadCount + 1);
   }
-  
+
   function getTimeDifference(createdAt: any) {
     if (createdAt instanceof Timestamp) {
       // If the createdAt value is a Firebase Timestamp object, convert it to a Date object
@@ -195,9 +199,12 @@ function Profile() {
 
   return (
     <div className="profile-wrapper">
-
-
-{togglePostModal && <PostModal toggleModals={toggleModals} onUploadPerformed={onUploadPerformed}/>}
+      {togglePostModal && (
+        <PostModal
+          toggleModals={toggleModals}
+          onUploadPerformed={onUploadPerformed}
+        />
+      )}
 
       <div className="profile-wrapper-content">
         <div className="profile-cover-picture">
@@ -283,9 +290,13 @@ function Profile() {
                 </div>
                 <div className="profile-post-upper-row-user-details-wrapper">
                   <div className="profile-post-upper-row-user-name">
-                    {queriedUser
-                      ? queriedUser.name + " " + queriedUser.surname
-                      : currentUser.displayName}
+                  {currentUser.displayName ? (
+            <div className="profile-post-user-name">{currentUser.displayName}</div>
+          ) : (
+            <div className="profile-post-user-name">
+              {queriedUser?.name + " " + queriedUser?.surname}
+            </div>
+          )}
                   </div>
 
                   <div className="profile-post-upper-row-timestamp">

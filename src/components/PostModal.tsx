@@ -98,8 +98,9 @@ function PostModal({toggleModals,onUploadPerformed}:PostModalProps) {
             if(onUploadPerformed){
               onUploadPerformed()
             }
-            
         }
+
+        alert("You did it!")
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {

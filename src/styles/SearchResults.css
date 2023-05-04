@@ -33,23 +33,14 @@
     width: 100%;
 }
 
-.user-result-profile-image-wrapper{
+
+.user-result-profile-image{
 
     max-width: 4rem;
     height: 4rem;
-    border-radius: 50%; /* make the wrapper a circle */
-    overflow: hidden; /* crop the image to the circle */
-
-}
-
-.user-result-profile-image{
-    display: block;
-    max-width: none;
-    height: auto;
-    width: 100%; /* make the image fill the wrapper horizontally */
-    height: 100%;
+    object-fit: cover;
     margin: auto; /* center the image vertically */
-
+    border-radius: 50%;
 }
 
 
