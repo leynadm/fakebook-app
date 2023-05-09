@@ -191,8 +191,8 @@ function Login() {
           <br></br> I would claim that all rights are reserved, but the truth is
           I didn't reserve any. <br></br> You are welcome to join the app and
           use it in good faith.<br></br>
-          <br></br>You can check my github or LinkedIn profiles to get in touch,
-          <br></br> or email me at matei_daniel@outlook.com.
+          <br></br>You can check my <a href="https://github.com/leynadm">Github</a> or <a href="https://linkedin.com/in/matei-daniel">LinkedIn</a> profiles to get in touch,
+          <br></br> or email me at <a href="mailto:matei_daniel@outlook.com">matei_daniel@outlook.com</a>.
         </div>
       </div>
     </div>

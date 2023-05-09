@@ -8,4 +8,5 @@ export interface User {
     verified:boolean,
     profileImage:string,
     coverImage:string
+    id?:string
   }

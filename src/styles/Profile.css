@@ -17,12 +17,19 @@
 }
 
 .profile-info-bio{
-    font-size: 1.2rem;
+    font-style: italic;
+
+}
+
+.profile-info-followers{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .profile-info-bar{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 5fr 1fr 5fr;
     gap: 1rem;
     height: 4rem;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px; 
@@ -234,13 +241,25 @@
     max-height: 100%;
 }
 
+.profile-post-user-name{
+    width: 100%;
+    text-align: left;
+}
+
+.profile-post-upper-row-user-name{
+align-items: center;
+justify-content: center;
+    align-self: flex-start;
+}
+
 .profile-post-upper-row{
     display: flex;
     width: 100%;
     justify-content: flex-start;
-    align-items: center;
     margin-top: 1rem;
-    border-bottom: 1px  lightgray solid;
+    border-bottom: 1px  white solid;
+    align-items: center;
+    padding-bottom: 0.25rem;
 }
 
 .profile-post-upper-row-user-image-wrapper{

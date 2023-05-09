@@ -9,6 +9,7 @@ import SearchProfile from "./SearchProfile";
 import "../styles/Home.css"
 import { useEffect } from "react";
 import { AuthContext } from "./Auth";
+import Settings from "./Settings";
 
 function Home () {
   const { currentUser } = useContext(AuthContext);
@@ -26,6 +27,7 @@ function Home () {
           <Route path="/" element={<HomeContent />} index />
           <Route path="results" element={<SearchResults />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
         </Routes>
       </PostContextProvider>
     </div>

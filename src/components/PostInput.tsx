@@ -19,7 +19,7 @@ function PostInput (props:PostInputProps) {
   return (
     <div className="post-input-wrappper">
         <span className="material-symbols-outlined" onClick={handleUserClick}>forum</span>     
-        <input className="post-input-field" type="text" placeholder={`Tell us what's happening, ${currentUser.displayName}?`} onClick={handleUserClick} />
+        <input className="post-input-field" type="text" placeholder={`Tell us what's happening?`} onClick={handleUserClick} />
     </div>
   );
 }

@@ -8,9 +8,7 @@ import SignUp from "./components/SignUp";
 import AuthRoute from "./components/AuthRoute";
 
 function App() {
-
-  const [firstLoginCheck, setFirstLoginCheck] = useState<any>(null) 
-
+  
   return (
     <div className="App">
       <AuthProvider>

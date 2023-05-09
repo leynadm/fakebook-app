@@ -6,7 +6,6 @@ import {
   getDoc,
   collection,
   setDoc,
-  deleteDoc,
   updateDoc,
   arrayUnion,
   query,
@@ -14,7 +13,8 @@ import {
   orderBy,
   limit,
   getDocs,
-  Timestamp
+  Timestamp,
+  arrayRemove,
 } from "firebase/firestore";
 import { db, storage } from "../config/firebase";
 import { ref, getDownloadURL, list } from "firebase/storage";
@@ -32,6 +32,8 @@ function SearchProfile() {
   const [queriedUser, setQueriedUser] = useState<User | undefined>();
   const [follow, setFollow] = useState<string>("");
   const [userFeed, setUserFeed] = useState<any>([]);
+  const [userFollowers, setUserFollowers] = useState<number>(0);
+
   useEffect(() => {
     getProfileImages();
     getProfileData();
@@ -52,7 +54,7 @@ function SearchProfile() {
     if (documentSnapshot.exists()) {
       const data = documentSnapshot.data();
       const users = data.users || [];
-
+      setUserFollowers(users.length);
       if (users.includes(currentUser.uid)) {
         setFollow("Unfollow");
       } else {
@@ -126,6 +128,7 @@ function SearchProfile() {
     });
 
     setFollow("Unfollow");
+    setUserFollowers(userFollowers + 1);
   }
 
   async function getUsersPosts() {
@@ -152,30 +155,33 @@ function SearchProfile() {
     if (follow === "Follow") {
       followUser();
     } else {
-      deleteUserFollower();
+      unfollowUser();
     }
   }
 
-  
-  async function deleteUserFollower() {
-    if (!id) {
-      console.error("User ID is undefined");
+  async function unfollowUser() {
+    const followersFeedRef = doc(collection(db, "followers-feed"), `${id}`);
+
+    const followersFeedDoc = await getDoc(followersFeedRef);
+
+    if (!followersFeedDoc.exists()) {
+      // If the followers feed document doesn't exist, there's nothing to unfollow
       return;
     }
 
-    const userRef = doc(
-      collection(db, "followers", `${id}`, "userFollowers"),
-      currentUser.uid
-    );
-    await deleteDoc(userRef);
-    // Delete following entry from 'Following' collection
-    const followingRef = doc(
-      collection(db, "following", `${currentUser.uid}`, "userFollowing"),
-      id
-    );
-    await deleteDoc(followingRef);
+    const followersFeedData = followersFeedDoc.data();
+
+    if (!followersFeedData.users.includes(currentUser.uid)) {
+      // If the current user is not in the users array, they're not following this user
+      return;
+    }
+
+    await updateDoc(followersFeedRef, {
+      users: arrayRemove(currentUser.uid),
+    });
 
     setFollow("Follow");
+    setUserFollowers(userFollowers - 1);
   }
 
   function getTimeDifference(createdAt: any) {
@@ -236,16 +242,30 @@ function SearchProfile() {
 
       <div className="profile-info-bar">
         <div className="profile-info-details">
-          {queriedUser?.fullname ? (
-            <div className="profile-user-name">{queriedUser.fullname}</div>
-          ) : (
+          {queriedUser?.name && queriedUser.surname ? (
             <div className="profile-user-name">
-              {queriedUser?.name + " " + queriedUser?.surname}
-            </div> 
+              {queriedUser.name + " " + queriedUser.surname}
+            </div>
+          ) : (
+            <div className="profile-user-name">{queriedUser?.fullname}</div>
           )}
         </div>
 
-        <div className="profile-info-bio">{queriedUser?.bio}</div>
+        <div className="profile-info-followers">
+          {userFollowers}
+          <span className="material-symbols-outlined search-profile-follow-icon">
+            favorite
+          </span>
+        </div>
+
+        <div className="profile-info-bio">
+          {" "}
+          {queriedUser?.bio ? (
+            <p>"{queriedUser.bio}"</p>
+          ) : (
+            <p>"Still thinking of a description..."</p>
+          )}
+        </div>
       </div>
 
       <div className="search-profile-follow-group">
@@ -275,37 +295,32 @@ function SearchProfile() {
                 </div>
                 <div className="profile-post-upper-row-user-details-wrapper">
                   <div className="profile-post-upper-row-user-name">
-                    {queriedUser?.fullname ? (
+                    {queriedUser?.name && queriedUser.surname ? (
                       <div className="profile-post-user-name">
-                        {queriedUser.fullname}
+                        {queriedUser.name + " " + queriedUser.surname}
                       </div>
                     ) : (
                       <div className="profile-post-user-name">
-                        {queriedUser?.name + " " + queriedUser?.surname}
+                        {queriedUser?.fullname}
                       </div>
                     )}
                   </div>
 
                   <div className="profile-post-upper-row-timestamp">
-                        
-                        {getTimeDifference(post.createdAt)}
-                     
+                    {getTimeDifference(post.createdAt)}
                   </div>
                 </div>
               </div>
               <div className="profile-post-middle-row">
-                 
-                    <div className="profile-post-middle-content">{post.text}</div>
+                <div className="profile-post-middle-content">{post.text}</div>
 
-                
-                    {post.image && (
-                      <img
-                        className="profile-post-middle-image"
-                        src={post.image}
-                        alt="user chosen"
-                      />
-                    )}
-         
+                {post.image && (
+                  <img
+                    className="profile-post-middle-image"
+                    src={post.image}
+                    alt="user chosen"
+                  />
+                )}
               </div>
               {/* Add rendering for other post properties as needed */}
             </div>
@@ -313,53 +328,6 @@ function SearchProfile() {
         </div>
       </div>
     </div>
-
-    /*
-    <div className="search-profile-wrapper">
-      <div className="search-profile-wrapper-content">
-        <div className="search-profile-cover-picture">
-          <img
-            className="search-profile-cover-image"
-            src={coverImageURL}
-            alt="cover"
-          />
-          <div className="search-profile-picture-wrapper">
-            <div className="search-profile-picture">
-              <img
-                className="search-profile-photo-image"
-                src={profileImageURL}
-                alt="cover"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="search-profile-info-bar">
-          <div>{queriedUser?.name + " " + queriedUser?.surname}</div>
-          <div className="search-profile-follow-group">
-            <button
-              onClick={handleFollowerClick}
-              className="search-profile-follow-btn"
-              type="button"
-            >
-              {follow}
-              <span className="material-symbols-outlined search-profile-follow-icon">
-                {follow === "Follow" ? "favorite" : "heart_broken"}
-              </span>
-            </button>
-          </div>
-          <div className="search-profile-verified-group">
-            <span className="material-symbols-outlined search-profile-follow-icon">
-              {queriedUser?.verified === true ? "verified" : ""}
-            </span>
-          </div>
-        </div>
-
-        <div className="search-profile-content"></div>
-      </div>
-    </div>
-
-    */
   );
 }
 

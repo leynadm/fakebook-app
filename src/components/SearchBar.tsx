@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../config/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import "../styles/SearchBar.css";
 import { User } from "../types/user";
@@ -12,11 +12,19 @@ function SearchBar() {
   useEffect(() => {}, []);
 
   async function getUsers() {
-    console.log("User to search is: " + userToSearch);
-    const q = query(
-      collection(db, "users"),
-      where("fullname", "array-contains", userToSearch)
-    );
+    console.log("User to search is: " + usersFound);
+
+    let q;
+
+    if (userToSearch !== "") {
+      q = query(
+        collection(db, "users"),
+        where("fullname", "array-contains", usersFound)
+      );
+    } else {
+      q = query(collection(db, "users"), limit(25));
+    }
+
     const querySnapshot = await getDocs(q);
 
     const userResults: User[] = [];
@@ -24,12 +32,12 @@ function SearchBar() {
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       const user = doc.data() as User;
+      user.id = doc.id; // Add this line to set the 'id' property
       userResults.push(user);
-      console.log(doc.id, " => ", doc.data());
     });
 
     setUsersFound(userResults);
-    navigate("/home/results", { state: { userToSearch } });
+    navigate("/home/results", { state: { usersFound: userResults } });
   }
 
   return (
@@ -43,7 +51,6 @@ function SearchBar() {
       <button className="bar-button" type="button" onClick={getUsers}>
         <span className="material-symbols-outlined">search</span>
       </button>
-
     </div>
   );
 }

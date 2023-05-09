@@ -28,14 +28,27 @@ function Profile() {
   const [userPostsArr, setUserPostsArr] = useState<PostData[]>([]);
   const [togglePostModal, setTogglePostModal] = useState<boolean>(false);
   const [uploadCount, setUploadCount] = useState(0);
+  const [userFollowers, setUserFollowers] = useState<number>(0);
 
   useEffect(() => {
     fetchProfileDataAndImages().then(() => {
       getUserPosts();
     });
 
+    getProfileFollowers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadCount]);
+
+  async function getProfileFollowers() {
+    const followersFeedRef = doc(db, "followers-feed", currentUser.uid);
+    const documentSnapshot = await getDoc(followersFeedRef);
+
+    if (documentSnapshot.exists()) {
+      const data = documentSnapshot.data();
+      const users = data.users || [];
+      setUserFollowers(users.length);
+    }
+  }
 
   async function fetchProfileDataAndImages() {
     const docRef = doc(db, "users", currentUser.uid);
@@ -258,20 +271,29 @@ function Profile() {
 
       <div className="profile-info-bar">
         <div className="profile-info-details">
-          {currentUser.displayName ? (
-            <div className="profile-user-name">{currentUser.displayName}</div>
-          ) : (
+          {queriedUser?.name && queriedUser.surname ? (
             <div className="profile-user-name">
-              {queriedUser?.name + " " + queriedUser?.surname}
+              {queriedUser.name + " " + queriedUser.surname}
             </div>
+          ) : (
+            <div className="profile-user-name">{queriedUser?.fullname}</div>
           )}
         </div>
 
-        <div className="profile-info-bio">Bio</div>
+        <div className="profile-info-followers">
+          {userFollowers}
+          <span className="material-symbols-outlined search-profile-follow-icon">
+            favorite
+          </span>
+        </div>
 
-        {/*<div className="profile-utility-buttons">
-          <button className="profile-utility-edit-btn">Edit Profile</button>
-        </div> */}
+        <div className="profile-info-bio">
+          {queriedUser?.bio ? (
+            <p>"{queriedUser.bio}"</p>
+          ) : (
+            <p>"Still thinking of a description..."</p>
+          )}
+        </div>
       </div>
 
       <PostInput toggleModals={toggleModals} />
@@ -290,13 +312,15 @@ function Profile() {
                 </div>
                 <div className="profile-post-upper-row-user-details-wrapper">
                   <div className="profile-post-upper-row-user-name">
-                  {currentUser.displayName ? (
-            <div className="profile-post-user-name">{currentUser.displayName}</div>
-          ) : (
-            <div className="profile-post-user-name">
-              {queriedUser?.name + " " + queriedUser?.surname}
-            </div>
-          )}
+                    {queriedUser?.name && queriedUser.surname ? (
+                      <div className="profile-post-user-name">
+                        {queriedUser.name + " " + queriedUser.surname}
+                      </div>
+                    ) : (
+                      <div className="profile-post-user-name">
+                        {queriedUser?.fullname}
+                      </div>
+                    )}
                   </div>
 
                   <div className="profile-post-upper-row-timestamp">

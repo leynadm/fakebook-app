@@ -3,7 +3,7 @@ import { AuthContext } from "./Auth";
 import "../styles/SignUp.css";
 import { auth, db } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc, arrayUnion } from "firebase/firestore";
+import { setDoc, doc, arrayUnion, Timestamp } from "firebase/firestore";
 
 function SignUp() {
   const { currentUser } = useContext(AuthContext);
@@ -39,12 +39,12 @@ function SignUp() {
         email,
         password
       );
-      console.log(userCredential);
+
       const user = userCredential.user;
-      console.log("SecondUserUid (user.uid): " + user.uid);
+      const birthdateTimestamp = Timestamp.fromDate(new Date(birthdate));
       await setDoc(doc(db, "users", user.uid), {
         sex: sex,
-        birthdate: birthdate,
+        birthdate: birthdateTimestamp,
         name: name,
         surname: surname,
         bio: "",
