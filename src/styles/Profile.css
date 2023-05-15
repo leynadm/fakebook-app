@@ -8,6 +8,8 @@
     padding-top: 1rem;
 }
 
+
+
 .profile-cover-picture {
     height: 30vh;
     width: 100%;
@@ -52,13 +54,21 @@
     height: 100%;
 }
 
+.profile-photo-image {
+    object-fit:cover;
+    border-radius: 50%;
+    width: 7rem;
+    height: 7rem;
+    position: relative;
+}
+
 .profile-picture-wrapper {
     margin-right: 1rem;
     margin-left: 1rem;
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 8rem;
+    height: auto;
     width: 8rem;
     left:50%;
     transform: translate(-50%, -90%); 
@@ -66,13 +76,16 @@
     border-radius: 50%;
 }
 
-.profile-picture{
-    height: auto;    
+.profile-button {
+    position: relative;
+    color: white;
+    border: none;
+    padding: 0.50rem;
+    border-radius: 15%;
 }
 
-.profile-picture-wrapper>div {
-    margin-top: auto;
-    /* push button to bottom */
+.profile-picture{
+    height: auto;    
 }
 
 .profile-wrapper-content {
@@ -86,14 +99,7 @@
     padding-bottom: 0.25rem;
 }
 
-.profile-button {
-    position: relative;
-    bottom: 20%;
-    color: white;
-    border: none;
-    padding: 0.50rem;
-    border-radius: 15%;
-}
+
 
 .profile-cover-choose-btn {
     width: 0.1px;
@@ -158,12 +164,7 @@
     background-color: red;
 }
  
-.profile-photo-image {
-    object-fit:cover;
-    border-radius: 50%;
-    width: 7rem;
-    height: 7rem;
-}
+
  
 .profile-posts-wrapper{
     display: flex;
@@ -316,4 +317,12 @@ justify-content: center;
   .profile-utility-edit-btn:focus-visible {
     box-shadow: none;
   }
-  
+
+.profile-info-btn{
+    margin-left: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+}

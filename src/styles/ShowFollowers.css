@@ -1,4 +1,4 @@
-.search-results-wrapper {
+.show-followers-wrapper {
     text-align: center;
     height: 94vh;
     position: absolute;
@@ -12,7 +12,15 @@
     padding: 1rem;
 }
 
-.search-result-group{
+.show-followers-profile-picture{
+    max-width: 4rem;
+    height: 4rem;
+    object-fit: cover;
+    margin: auto; /* center the image vertically */
+    border-radius: 50%;
+}
+
+.show-follower-user-wrapper{
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     justify-content: center;
@@ -22,34 +30,10 @@
     width: 100%;
 }
 
-.search-result-user{
+.show-followers-user-name{
     font-size: 1.5rem;
     text-decoration: none;
     justify-self: flex-start;
     width: 100%;
 }
 
-.search-result-user-link{
-    text-decoration: none;
-    width: 100%;
-    color: black;
-    font-weight: bold;
-}
-
-
-.user-result-profile-image{
-
-    max-width: 4rem;
-    height: 4rem;
-    object-fit: cover;
-    margin: auto; /* center the image vertically */
-    border-radius: 50%;
-}
-
-.search-results-title{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.25rem;
-    padding-bottom: 0.5rem;
-}

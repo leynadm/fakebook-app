@@ -19,6 +19,7 @@ import { User } from "../types/user";
 import { PostData } from "../types/postdata";
 import PostInput from "./PostInput";
 import PostModal from "./PostModal";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const { currentUser } = useContext(AuthContext);
@@ -29,6 +30,8 @@ function Profile() {
   const [togglePostModal, setTogglePostModal] = useState<boolean>(false);
   const [uploadCount, setUploadCount] = useState(0);
   const [userFollowers, setUserFollowers] = useState<number>(0);
+  const [userIndividualFollowers, setUserIndividualFollowers] = useState([])
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProfileDataAndImages().then(() => {
@@ -47,6 +50,7 @@ function Profile() {
       const data = documentSnapshot.data();
       const users = data.users || [];
       setUserFollowers(users.length);
+      setUserIndividualFollowers(users)
     }
   }
 
@@ -147,6 +151,10 @@ function Profile() {
         });
       }
     };
+
+    function handleFollowersClick() {
+      navigate("followers",{state:{userIndividualFollowers:userIndividualFollowers}});
+    }
 
   async function updateUserImages(
     linkType: string,
@@ -282,9 +290,11 @@ function Profile() {
 
         <div className="profile-info-followers">
           {userFollowers}
-          <span className="material-symbols-outlined search-profile-follow-icon">
+          <button className="profile-info-btn" onClick={handleFollowersClick}>
+          <span onClick={handleFollowersClick} className="material-symbols-outlined profile-follow-icon">
             favorite
           </span>
+          </button>
         </div>
 
         <div className="profile-info-bio">

@@ -50,6 +50,7 @@
     padding: 0.5rem;
     font-weight: 100;
     font-size: 1rem;
+    white-space: pre-wrap;
 }
 
 .post-upper-row-timestamp{
@@ -90,4 +91,23 @@
 
 .post-middle-row{
     width: 100%;
+}
+
+.post-bottom-row{
+    border-top: 1px  white solid;
+    display: flex;
+    width: 100%;
+    justify-content:center;
+    align-items: center;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.post-leave-comment-icon{
+    padding-right: 1rem;
+}
+
+.post-see-comments-btn{
+    display: flex;
+    border: none;
 }

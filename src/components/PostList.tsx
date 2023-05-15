@@ -8,21 +8,13 @@ import {
   orderBy,
   limit,
   documentId,
-  Timestamp,
-  getDoc,
-  doc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { AuthContext } from "./Auth";
 import { User } from "../types/user";
 import "../styles/PostList.css";
-
+import Post from "./Post";
 import { PostData } from "../types/postdata";
-
-interface FollowedUserData {
-  recentPosts: Array<PostData & { id: string }>;
-  // Add any other properties you expect to have in the feedData elements
-}
 
 function PostList() {
   const { currentUser } = useContext(AuthContext);
@@ -50,7 +42,6 @@ function PostList() {
     const followedUsersSnapshot = await getDocs(q);
 
     // Extract the data from the above query and create an array of objects containing the documents data of the users the logged in user is following
-
     let feedData = followedUsersSnapshot.docs.map((doc) => doc.data());
 
     // Flaten the "recentPosts" array field in the feedData document objects into a single array. The reduce() method iterates over the feedData array and concatenates the recentPosts array of each user into a single array
@@ -113,7 +104,8 @@ function PostList() {
         const postsSnapshot = await getDocs(postsQuery);
 
         postsSnapshot.forEach((doc) => {
-          batchedPostsData.push(doc.data() as PostData);
+          const postData = { ...doc.data(), postId: doc.id } as PostData;
+          batchedPostsData.push(postData);
         });
       }
 
@@ -122,9 +114,6 @@ function PostList() {
         const userId = userData.id;
         userIdToUserData[userId] = userData;
       });
-
-      console.log("logging userId to userData");
-      console.log(userIdToUserData);
 
       const postsDataBatch: any = batchedPostsData.map(async (post: any) => {
         const userID = post.userID;
@@ -149,87 +138,14 @@ function PostList() {
         (a: any, b: any) => b.createdAt - a.createdAt
       );
       setUserFeed(sortedFeedBatchPostData);
-    }
-  }
-
-  function getTimeDifference(createdAt: any) {
-    if (createdAt instanceof Timestamp) {
-      // If the createdAt value is a Firebase Timestamp object, convert it to a Date object
-      createdAt = createdAt.toDate();
-    } else if (!(createdAt instanceof Date)) {
-      // If the createdAt value is not a Date object or a Timestamp object, try to parse it as a string
-      const parsedDate = Date.parse(createdAt);
-      if (!isNaN(parsedDate)) {
-        // If the parsed value is a valid date, create a new Date object from it
-        createdAt = new Date(parsedDate);
-      } else {
-        // Otherwise, throw an error
-        throw new Error(`Invalid createdAt value: ${createdAt}`);
-      }
-    }
-
-    const now = new Date();
-    const diffMs = now.getTime() - createdAt.getTime();
-
-    // Convert milliseconds to minutes, hours, and days
-    const diffMinutes = Math.round(diffMs / (1000 * 60));
-    const diffHours = Math.round(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-
-    // Determine the appropriate format based on the time difference
-    if (diffMinutes < 60) {
-      return `${diffMinutes} minutes ago`;
-    } else if (diffHours < 24) {
-      return `${diffHours} hours ago`;
-    } else {
-      return `${diffDays} days ago`;
+        console.log(sortedFeedBatchPostData)
     }
   }
 
   return (
     <div className="posts-wrapper">
       {userFeed.map((post: PostData, index: number) => (
-        <div className="post-wrapper" key={index}>
-          <div className="post-upper-row">
-            <div className="post-upper-row-user-image-wrapper">
-              <img
-                className="post-upper-row-user-image"
-                src={
-                  /* queriedUser
-  ? queriedUser.image
-  : */ post.profileImage
-                }
-                alt="user profile"
-              />
-            </div>
-            <div className="post-upper-row-user-details-wrapper">
-              <div className="post-upper-row-user-name">
-                {post.name + " " + post.surname}
-
-                {/* 
-                {queriedUser
-                  ? queriedUser.name + " " + queriedUser.surname
-                  : currentUser.displayName}
-              */}
-              </div>
-
-              <div className="post-upper-row-timestamp">
-                {getTimeDifference(post.createdAt)}
-              </div>
-            </div>
-          </div>
-          <div className="post-middle-row">
-            <div className="post-middle-content">{post.text}</div>
-            {post.image && (
-              <img
-                className="post-middle-image"
-                src={post.image}
-                alt="user chosen"
-              />
-            )}
-          </div>
-          {/* Add rendering for other post properties as needed */}
-        </div>
+        <Post key={post.postId} post={post} index={index} />
       ))}
     </div>
   );

@@ -7,11 +7,9 @@ import {
   getAdditionalUserInfo,
 } from "firebase/auth";
 import { auth, db } from "../config/firebase";
-import { AuthContext } from "./Auth";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
 import { setDoc, doc, arrayUnion, getDoc } from "firebase/firestore";
-import { User } from "../types/user";
 
 function Login() {
   const userAuth = getAuth();
@@ -96,11 +94,11 @@ function Login() {
       await setDoc(doc(db, "users", userID), {
         sex: "",
         birthdate: new Date(1800, 1, 30),
-        name: "",
+        name: fullname,
         surname: "",
         bio: "",
         verified: false,
-        fullname: arrayUnion("", "", fullname),
+        fullname: ["", "", fullname], 
         profileImage:
           "https://firebasestorage.googleapis.com/v0/b/stalkbook-99d40.appspot.com/o/default-images%2Fdefault-profile-picture.jpg?alt=media&token=0f487134-f813-4975-836c-f32df2eded81",
         coverImage:

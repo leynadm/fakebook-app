@@ -12,21 +12,27 @@ function SearchBar() {
   useEffect(() => {}, []);
 
   async function getUsers() {
-    console.log("User to search is: " + usersFound);
+
+    console.log("User to search is: " + userToSearch);
 
     let q;
 
     if (userToSearch !== "") {
+
+      console.log('value of userToSearch:' + userToSearch)
       q = query(
         collection(db, "users"),
-        where("fullname", "array-contains", usersFound)
+        where('fullname', 'array-contains', userToSearch),
+
       );
     } else {
       q = query(collection(db, "users"), limit(25));
     }
 
-    const querySnapshot = await getDocs(q);
 
+    const querySnapshot = await getDocs(q);
+    console.log(querySnapshot)
+    
     const userResults: User[] = [];
 
     querySnapshot.forEach((doc) => {
@@ -35,8 +41,10 @@ function SearchBar() {
       user.id = doc.id; // Add this line to set the 'id' property
       userResults.push(user);
     });
-
+    
+    console.log(userResults);
     setUsersFound(userResults);
+
     navigate("/home/results", { state: { usersFound: userResults } });
   }
 

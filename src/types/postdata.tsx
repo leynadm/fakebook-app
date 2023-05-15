@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export type PostData = {
     userID: string; 
     text: string;
@@ -9,4 +7,6 @@ export type PostData = {
     surname?:string,
     timestamp?:any
     profileImage:string
+    commentsCount:number
+    postId:string
   };

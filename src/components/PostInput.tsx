@@ -1,16 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import "../styles/PostInput.css";
-import { AuthContext } from "./Auth";
 import "../styles/PostInput.css";
-import defaultProfileImage from "../assets/default-profile.jpeg";
   
 interface PostInputProps {
   toggleModals: () => void;
 }
 
 function PostInput (props:PostInputProps) {
-
-  const { currentUser } = useContext(AuthContext);
 
   function handleUserClick(){
     props.toggleModals()

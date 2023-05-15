@@ -1,0 +1,237 @@
+.settings-wrapper {
+    text-align: center;
+    height: calc(100vh - 4vh);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.field-to-update {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.settings-title {
+    
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+
+.edit-group {
+    position: relative;
+    margin-bottom: 45px;
+}
+
+.edit-input {
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 300px;
+    border: none;
+    border-bottom: 1px solid #757575;
+}
+
+.edit-input:focus {
+    outline: none;
+}
+
+/* LABEL ======================================= */
+.edit-label {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+/* active state */
+.edit-input:focus~.edit-label,
+.edit-input:valid~.edit-label {
+    top: -20px;
+    font-size: 14px;
+    color: #5264AE;
+}
+
+/* BOTTOM BARS ================================= */
+.edit-bar {
+    position: relative;
+    display: block;
+    width: 300px;
+}
+
+.edit-bar:before,
+.edit-bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #5264AE;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.edit-bar:before {
+    left: 50%;
+}
+
+.edit-bar:after {
+    right: 50%;
+}
+
+/* active state */
+.edit-input:focus~.edit-bar:before,
+.edit-input:focus~.edit-bar:after {
+    width: 50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.edit-highlight {
+    position: absolute;
+    height: 60%;
+    width: 100px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* active state */
+.edit-input:focus~.edit-highlight {
+    -webkit-animation: inputHighlighter 0.3s ease;
+    -moz-animation: inputHighlighter 0.3s ease;
+    animation: inputHighlighter 0.3s ease;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+@-moz-keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-update-btn {
+    margin-left: 1rem;
+    background-color: black;
+    border: 0;
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: white;
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    padding: .75rem 1rem;
+    text-align: center;
+    text-decoration: none #D1D5DB solid;
+    text-decoration-thickness: auto;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 1px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.edit-update-btn:hover {
+    background-color: #61777F;
+}
+
+.edit-update-btn:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.edit-update-btn:focus-visible {
+    box-shadow: none;
+}
+
+
+
+
+.settings-fieldset {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border: 2px solid #5264AE;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .settings-fieldset-legend {
+    color: #5264AE;
+    font-weight: bold;
+    padding: 5px 10px;
+    border: 2px solid #5264AE;
+    border-radius: 5px;
+  }
+  
+  .option-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .settings-fieldset-option-label {
+    margin-left: 5px;
+    font-size: 18px;
+  }
+  
+  .settings-fieldset-option-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  .settings-fieldset-option-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+

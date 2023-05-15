@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/SearchResults.css";
 import { useLocation } from "react-router";
-import {
-  collection,
-  query,
-  where,
-  getDocs
-} from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { Link } from "react-router-dom";
 
@@ -56,6 +51,10 @@ function SearchResults() {
 
   return (
     <div className="search-results-wrapper">
+      <div className="search-results-title">
+        We found these people for you...
+        <span className="material-symbols-outlined">person_search</span>
+      </div>
       {usersFound.map((userResult: UserResult, index: number) => (
         <div key={index} className="search-result-group">
           <div className="user-result-profile-image-wrapper">

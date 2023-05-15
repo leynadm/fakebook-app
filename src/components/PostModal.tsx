@@ -7,27 +7,23 @@ import {
   setDoc,
   doc,
   Timestamp,
-  FieldValue,
   serverTimestamp,
   arrayUnion,
   updateDoc,
-  getDoc
+  getDoc,
 } from "firebase/firestore";
 import { PostContext } from "./PostContext";
 import uuid from "react-uuid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-
 interface PostModalProps {
-  
   toggleModals: () => void;
   onUploadPerformed?: () => void;
 }
 
-function PostModal({toggleModals,onUploadPerformed}:PostModalProps) {
-
-  function handleUserClose(){
-    toggleModals()
+function PostModal({ toggleModals, onUploadPerformed }: PostModalProps) {
+  function handleUserClose() {
+    toggleModals();
   }
 
   const { increaseUpdateSequence } = useContext(PostContext);
@@ -60,6 +56,7 @@ function PostModal({toggleModals,onUploadPerformed}:PostModalProps) {
         userID: currentUser.uid,
         image: imageUrl,
         timestamp: timestamp,
+        commentsCount: 0,
       });
 
       const newFollowersFeedRef = doc(
@@ -80,7 +77,7 @@ function PostModal({toggleModals,onUploadPerformed}:PostModalProps) {
         await setDoc(newFollowersFeedRef, {
           lastPost: serverTimestampObj,
           recentPosts: arrayUnion(recentPosts),
-          users:[]
+          users: [],
         });
       } else {
         await updateDoc(newFollowersFeedRef, {
@@ -89,18 +86,18 @@ function PostModal({toggleModals,onUploadPerformed}:PostModalProps) {
         });
       }
 
-      handleUserClose()
+      handleUserClose();
       increaseUpdateSequence();
       setPostText("");
       setSelectedFile(null);
       handleRemoveClick();
-            // Update the uploadCompleted state in the Profile component
-            if(onUploadPerformed){
-              onUploadPerformed()
-            }
-        }
+      // Update the uploadCompleted state in the Profile component
+      if (onUploadPerformed) {
+        onUploadPerformed();
+      }
+    }
 
-        alert("You did it!")
+    alert("You did it!");
   }
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -129,7 +126,10 @@ function PostModal({toggleModals,onUploadPerformed}:PostModalProps) {
         <div className="post-modal-upper-row">
           <div className="post-modal-title">Create Post</div>
 
-          <span className="material-symbols-outlined post-modal-close-btn" onClick={handleUserClose}>
+          <span
+            className="material-symbols-outlined post-modal-close-btn"
+            onClick={handleUserClose}
+          >
             cancel
           </span>
         </div>
@@ -143,10 +143,15 @@ function PostModal({toggleModals,onUploadPerformed}:PostModalProps) {
 
           <div className="post-photo-image-group">
             <div className="post-photo-btn-group">
-            {fileSource && <button className="post-photo-image-remove-btn" onClick={handleRemoveClick}><span className="material-symbols-outlined">
-delete
-</span></button>}
-</div>
+              {fileSource && (
+                <button
+                  className="post-photo-image-remove-btn"
+                  onClick={handleRemoveClick}
+                >
+                  <span className="material-symbols-outlined">delete</span>
+                </button>
+              )}
+            </div>
             {fileSource && (
               <img
                 className="post-user-uploaded-image"
@@ -161,7 +166,6 @@ delete
           <div className="post-modal-additional-title">Add to your post</div>
 
           <div className="photo-upload-group">
-            
             <label htmlFor="post-photo-choose-btn">
               <span className="material-symbols-outlined">image</span>
             </label>
@@ -173,11 +177,9 @@ delete
               onChange={handleFileChange}
             />
           </div>
-        
         </div>
 
         <div className="post-modal-lower">
-          
           <button className="post-modal-btn" type="button" onClick={addPost}>
             Post
           </button>
