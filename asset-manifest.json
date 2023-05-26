@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/fakebook-app/static/css/main.3e9764fc.css",
-    "main.js": "/fakebook-app/static/js/main.e30f8983.js",
+    "main.js": "/fakebook-app/static/js/main.61ac2109.js",
     "static/js/787.8ec1fbdf.chunk.js": "/fakebook-app/static/js/787.8ec1fbdf.chunk.js",
     "static/media/default-profile.jpeg": "/fakebook-app/static/media/default-profile.22a88f0fed7f5ae2f4cf.jpeg",
     "static/media/default-cover.jpeg": "/fakebook-app/static/media/default-cover.c9beb832d0a064d34a8c.jpeg",
     "static/media/logo-no-banner-no-background.png": "/fakebook-app/static/media/logo-no-banner-no-background.4d15776e6a30cce0e014.png",
     "index.html": "/fakebook-app/index.html",
     "main.3e9764fc.css.map": "/fakebook-app/static/css/main.3e9764fc.css.map",
-    "main.e30f8983.js.map": "/fakebook-app/static/js/main.e30f8983.js.map",
+    "main.61ac2109.js.map": "/fakebook-app/static/js/main.61ac2109.js.map",
     "787.8ec1fbdf.chunk.js.map": "/fakebook-app/static/js/787.8ec1fbdf.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3e9764fc.css",
-    "static/js/main.e30f8983.js"
+    "static/js/main.61ac2109.js"
   ]
 }
