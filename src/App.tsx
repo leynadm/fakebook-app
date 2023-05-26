@@ -1,5 +1,4 @@
 import "./App.css";
-import React,{useState} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -12,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <AuthProvider>
-        <Router>
+        <Router basename="/">
           <Routes>
             {/* If the user is signed in and tries to access login, reroute him to home */}
             <Route element={<AuthRoute type="home" />}>

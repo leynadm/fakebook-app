@@ -12,8 +12,7 @@ import {
   updateDoc,
   arrayUnion, 
   doc,
-  Timestamp,
-  FieldValue
+  Timestamp
 } from "firebase/firestore";
 
 interface CommentInputProps {
@@ -32,7 +31,7 @@ function CommentInput({ postId }: CommentInputProps) {
       const commentData = {
         text: commentText,
         userId: currentUser.uid,
-        timestamp: serverTimestamp()
+        timestamp: Timestamp
       }
 
       const q = query(collection(db, "comments"), where("postId", "==", postId));
