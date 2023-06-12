@@ -66,7 +66,7 @@ function ShowFollowers() {
   return (
     <div className="show-followers-wrapper">
             <div className="search-results-title">
-        These people want are following you...
+        These people are following you...
         <span className="material-symbols-outlined">favorite</span>
       </div>
       {userIndividualFollowersData.map((user:UserData,index:number)=>(
